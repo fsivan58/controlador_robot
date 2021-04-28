@@ -42,7 +42,7 @@ end RobotMain;
 
 architecture Behavioral of RobotMain is
 
-component clock1hz  
+component clock  
    Port( clk, reset     :in STD_LOGIC;
            clk_out      :out STD_LOGIC);
 end component;
@@ -58,7 +58,7 @@ end component;
    SIGNAL w_clk_int, w_reset, w_clk_out : STD_LOGIC;
 begin
 
-mclk : clock1hz PORT MAP ( clk => clk_int, reset =>reset, clk_out => clk_out);
+mclk : clock PORT MAP ( clk => clk_int, reset =>reset, clk_out => clk_out);
 
 led7 : sem7 PORT MAP (n_input => "0001", pos=>'1', display => display_out, pos_out=>pos_out) ;
 

@@ -18,7 +18,6 @@
 -- 
 ----------------------------------------------------------------------------------
 
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -31,21 +30,38 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity clock1hz is
+entity clock is
+ generic (
+    FREQ_G       : integer := 50        -- Operating frequency in MHz.
+    );
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC;
            clk_out : out STD_LOGIC);
-end clock1hz;
+end clock;
 
-architecture Behavioral of clock1hz is
+architecture Behavioral of clock is
 
+    signal   count    : integer   range 0 to FREQ_G;
+    signal   state    : std_logic := '1';
 begin
 
-PROCESS (clk)
-BEGIN
-    clk_out <= clk and reset;
-END PROCESS;
+    frequency_divider: process (clk)
+    begin
+        if reset = '1' then
+            state <= '0';
+            count <= 0;
+        else 
+            if count = FREQ_G then
+                state <= not state;
+                count <= 0;
+            else
+                count <= count + 1;
+            end if;
+        end if;
+    end process;
+    process (state)
+    begin
+        clk_out <= state;
+    end process;
 
 end Behavioral;
-
-
