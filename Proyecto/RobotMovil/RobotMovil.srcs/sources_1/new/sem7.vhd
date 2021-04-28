@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 28.04.2021 13:28:57
+-- Create Date: 28.04.2021 14:16:35
 -- Design Name: 
--- Module Name: RobotMain - Behavioral
+-- Module Name: sem7 - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,39 +31,28 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity RobotMain is
- Port (clk_int : in STD_LOGIC;
-           reset : in STD_LOGIC;
-           clk_out : out STD_LOGIC;
-            display_out  : out std_logic_vector (6 downto 0);
-            pos_out : out STD_LOGIC);
-           
-end RobotMain;
-
-architecture Behavioral of RobotMain is
-
-component clock1hz  
-   Port( clk, reset     :in STD_LOGIC;
-           clk_out      :out STD_LOGIC);
-end component;
-
-component sem7
+entity sem7 is
     Port ( n_input  : in bit_vector (3 downto 0);
            pos      : in STD_LOGIC;
            display  : out std_logic_vector (6 downto 0);
            pos_out : out STD_LOGIC);
-end component;
+end sem7;
 
-   
-   SIGNAL w_clk_int, w_reset, w_clk_out : STD_LOGIC;
+architecture Behavioral of sem7 is
+
 begin
 
-mclk : clock1hz PORT MAP ( clk => clk_int, reset =>reset, clk_out => clk_out);
-
-led7 : sem7 PORT MAP (n_input => "0001", pos=>'1', display => display_out, pos_out=>pos_out) ;
+pos_out <= pos;
+		  --GFEDCBA
+display <= "1000000" WHEN n_input ="0000" ELSE
+           "1111001" WHEN n_input ="0001" ELSE
+           "0100100" WHEN n_input ="0010" ELSE
+           "0110000" WHEN n_input ="0011" ELSE
+           "0011001" WHEN n_input ="0100" ELSE
+           "0010010" WHEN n_input ="0101" ELSE
+           "0000010" WHEN n_input ="0110" ELSE
+           "1111000" WHEN n_input ="0111" ELSE
+           "0000000" WHEN n_input ="1000" ELSE
+           "0000110"; 
 
 end Behavioral;
-
-
-
-
