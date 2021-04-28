@@ -1,0 +1,16 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Thu Apr 29 01:38:03 2021
+# Process ID: 14140
+# Current directory: D:/Repositorios/Proyecto/RobotMovil
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent4312 D:\Repositorios\Proyecto\RobotMovil\RobotMovil.xpr
+# Log file: D:/Repositorios/Proyecto/RobotMovil/vivado.log
+# Journal file: D:/Repositorios/Proyecto/RobotMovil\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project D:/Repositorios/Proyecto/RobotMovil/RobotMovil.xpr
+update_compile_order -fileset sources_1
+launch_simulation -simset [get_filesets test_components ]
+launch_simulation -simset [get_filesets test_components ]

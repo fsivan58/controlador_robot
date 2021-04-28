@@ -5,3 +5,6 @@ Proyecto/RobotMovil/vivado.log
 Proyecto/RobotMovil/RobotMovil.sim/sim_1/behav/xsim/elaborate.log
 Proyecto/RobotMovil/RobotMovil.sim/
 Proyecto/RobotMovil/vivado_11096.backup.log
+*.jou
+*.log
+*.str

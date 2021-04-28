@@ -45,12 +45,12 @@ architecture Behavioral of clock is
     signal   state    : std_logic := '1';
 begin
 
-    frequency_divider: process (clk)
+frequency_divider: process (clk)
     begin
         if reset = '1' then
             state <= '0';
             count <= 0;
-        else 
+        elsif clk'event then
             if count = FREQ_G then
                 state <= not state;
                 count <= 0;
