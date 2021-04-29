@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity clock is
  generic (
-    FREQ_G       : integer := 50        -- Operating frequency in MHz.
+    FREQ_G       : integer := 50        -- -- Operating frequency in Hz.
     );
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC;
@@ -40,8 +40,8 @@ entity clock is
 end clock;
 
 architecture Behavioral of clock is
-
-    signal   count    : integer   range 0 to FREQ_G;
+    constant   max_count : integer := (50_000_000/FREQ_G) -1;
+    signal   count    : integer   range 0 to max_count;
     signal   state    : std_logic := '1';
 begin
 
@@ -50,8 +50,8 @@ frequency_divider: process (clk)
         if reset = '1' then
             state <= '0';
             count <= 0;
-        elsif clk'event then
-            if count = FREQ_G then
+         elsif clk'event then
+            if count = max_count then
                 state <= not state;
                 count <= 0;
             else
@@ -59,9 +59,7 @@ frequency_divider: process (clk)
             end if;
         end if;
     end process;
-    process (state)
-    begin
-        clk_out <= state;
-    end process;
+    
+      clk_out <= state;
 
 end Behavioral;

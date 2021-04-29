@@ -39,7 +39,7 @@ architecture testbench of test_clock is
 
  component clock
   generic (
-    FREQ_G       : integer := 50        -- Operating frequency in MHz.
+    FREQ_G       : integer     -- Operating frequency in Hz.
     );
     port (
         clk : in  std_logic;
@@ -51,7 +51,7 @@ architecture testbench of test_clock is
 
 begin
 
-clocksimul : clock generic map (FREQ_G => 50)  
+clocksimul : clock generic map (FREQ_G => 10_000_000)  
         port map (
         clk  => clk,
         reset    => nRST,
@@ -66,9 +66,9 @@ clocksimul : clock generic map (FREQ_G => 50)
     
     process begin
         nRST <= '0';
-        wait for 50ns;
-        nRST <= '1';
-        wait for 50ns;
+        wait for 200ns;
+       -- nRST <= '1';
+       -- wait for 200ns;
     end process;
 
 end architecture testbench;
