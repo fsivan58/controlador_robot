@@ -2,10 +2,10 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Thu Apr 29 01:38:03 2021
-# Process ID: 14140
+# Start of session at: Thu Apr 29 10:17:33 2021
+# Process ID: 12828
 # Current directory: D:/Repositorios/Proyecto/RobotMovil
-# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent4312 D:\Repositorios\Proyecto\RobotMovil\RobotMovil.xpr
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent8216 D:\Repositorios\Proyecto\RobotMovil\RobotMovil.xpr
 # Log file: D:/Repositorios/Proyecto/RobotMovil/vivado.log
 # Journal file: D:/Repositorios/Proyecto/RobotMovil\vivado.jou
 #-----------------------------------------------------------
@@ -13,4 +13,14 @@ start_gui
 open_project D:/Repositorios/Proyecto/RobotMovil/RobotMovil.xpr
 update_compile_order -fileset sources_1
 launch_simulation -simset [get_filesets test_components ]
+source test_sem7.tcl
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top test_clock [get_filesets test_components]
+set_property top_lib xil_defaultlib [get_filesets test_components]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset test_components
 launch_simulation -simset [get_filesets test_components ]
+source test_clock.tcl
