@@ -3,7 +3,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports reset]
 set_property IOSTANDARD LVCMOS33 [get_ports clk_int]
 
 set_property PACKAGE_PIN N11 [get_ports clk_int]
-set_property PACKAGE_PIN R6 [get_ports clk_out]
+set_property PACKAGE_PIN N12 [get_ports clk_out]
 set_property PACKAGE_PIN B7 [get_ports reset]
 
 set_property PACKAGE_PIN K12 [get_ports {display_out[6]}]
@@ -22,3 +22,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports {display_out[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {display_out[0]}]
 set_property PACKAGE_PIN T9 [get_ports pos_out]
 set_property IOSTANDARD LVCMOS33 [get_ports pos_out]
+

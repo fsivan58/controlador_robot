@@ -69,14 +69,13 @@ process begin
 end process;
 
 process begin
-    wait for 100ns;
-    wait for 10 us;
+    wait for 5 us;
     echo_i <= '1';
-    wait for 125_000 ns;
+    wait for 1 us;
     echo_i <= '0';
-    wait for 125_000 ns;
+    wait for 1 us;
     echo_i <= '1';
-    wait for 125_000 ns;
+    wait for 10 us;
 end process;
 
 
