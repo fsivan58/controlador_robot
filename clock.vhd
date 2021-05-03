@@ -40,26 +40,21 @@ port (
 end clock;
 
 architecture Behavioral of clock is
-    constant max_count: integer   := 50;
+    constant max_count: integer   := 49;
     signal   count    : integer   range 0 to max_count;
     signal   state    : std_logic := '1';
 begin
-    frequency_divider: process (clk_in)
-    begin
+    frequency_divider: process (clk_in, nRST) begin
         if nRST = '1' then
             state <= '0';
             count <= 0;
         elsif clk_in'event and clk_in = '1' then
+                count <= count + 1;
             if count = max_count then
                 state <= not state;
                 count <= 0;
-            else
-                count <= count + 1;
             end if;
         end if;
-    end process;
-    process (state)
-    begin
         clk_out <= state;
     end process;
 end Behavioral;

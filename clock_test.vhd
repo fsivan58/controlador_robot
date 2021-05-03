@@ -43,7 +43,9 @@ architecture testbench of clockTest is
         clk_out: out std_logic
     );
     end component;
-    signal clk_in, nRST, clk_out: STD_LOGIC;
+    signal clk_in  : std_logic := '0';
+    signal nRST    : std_logic := '0';
+    signal clk_out : std_logic;
 begin
     clocksimul : clock port map (
         clk_in  => clk_in,
@@ -51,17 +53,17 @@ begin
         clk_out => clk_out
     );
     process begin
-        clk_in <= '1';
-        wait for 5ns;
         clk_in <= '0';
+        wait for 5ns;
+        clk_in <= '1';
         wait for 5ns;
     end process;
     
-    process begin
-        wait for 100ns;
-        nRST <= '1';
-        wait for 100ns;
-        nRST <= '0';
-        wait;
-    end process;
+--    process begin
+--        wait for 100ns;
+--        nRST <= '1';
+--        wait for 100ns;
+--        nRST <= '0';
+--        wait;
+--    end process;
 end architecture testbench;

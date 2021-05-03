@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 22.04.2021 18:30:33
+-- Create Date: 02.05.2021 10:12:47
 -- Design Name: 
--- Module Name: counter - Behavioral
+-- Module Name: comparator - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,7 +21,6 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,27 +31,24 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity counter is
-    generic(n : positive := 10);
-    port(
-        clk            : in  std_logic;
-        nRST           : in  std_logic;
-        counter_output : out std_logic_vector (n-1 downto 0)
+entity comparator is
+    port (
+        A : in  std_logic_vector(21 downto 0);
+        B : in  std_logic_vector(21 downto 0);
+        C : out std_logic
     );
-end counter;
+end comparator;
 
-architecture Behavioral of counter is
-    signal count : integer := 0;
+architecture Behavioral of comparator is
+
 begin
 
-    process (clk, nRST) begin
-        if nRST = '1' then
-            count <= 0;
-        end if;
-        if rising_edge(clk) then
-            count <= count + 1;
+    process (A, B) begin
+        if B < A then
+            C <= '1';
+        else
+            C <= '0';
         end if;
     end process;
-    counter_output <= std_logic_vector(to_unsigned(count, 22));
 
 end Behavioral;

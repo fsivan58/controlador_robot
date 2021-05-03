@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -40,12 +41,13 @@ architecture Behavioral of counter_test is
         generic(n : positive := 10);
         port(
             clk            : in  std_logic;
-            nRST          : in  std_logic;
+            nRST           : in  std_logic;
             counter_output : out std_logic_vector (n-1 downto 0)
         );
     end component;
     signal clk, nRST  : std_logic;
     signal counter_output : std_logic_vector (21 downto 0);
+    signal count : integer := 0;
 begin
     counter_simul :
         counter generic map (22)
@@ -55,12 +57,13 @@ begin
             counter_output => counter_output
         );
     
-    process begin
-        wait for 10us;
-        nRST <= '1';
-        wait for 10us;
-        nRST <= '0';
-        wait;
+    process (counter_output) begin
+        count <= to_integer(unsigned(counter_output));
+        if count < 9 then
+            nRST <= '0';
+        else
+            nRST <= '1';
+        end if;
     end process;
 
     process begin
