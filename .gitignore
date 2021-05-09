@@ -1,6 +1,7 @@
 controlador-robot.runs/*
 controlador-robot.cache/*
 controlador-robot.sim/*
+*.xpr
 *.log
 *.jou
 *.str
