@@ -1,5 +1,6 @@
-controlador-robot.runs/
-controlador-robot.cache/
+controlador-robot.runs/*
+controlador-robot.cache/*
+controlador-robot.sim/*
 *.log
 *.jou
 *.str
