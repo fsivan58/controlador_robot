@@ -1,0 +1,5 @@
+controlador-robot.runs/
+controlador-robot.cache/
+*.log
+*.jou
+*.str
