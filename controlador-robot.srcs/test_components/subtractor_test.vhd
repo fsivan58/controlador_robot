@@ -54,21 +54,19 @@ begin
     );
     
     process begin
-        a <= std_logic_vector(to_unsigned(100), 16);
-        b <= '0';
+    
+        a <= std_logic_vector(to_unsigned(100, 16));
+        b <= std_logic_vector(to_unsigned(100, 16));
         wait for 5ns;
-        
-        a <= '0';
-        b <= '0';
+    
+        a <= std_logic_vector(to_unsigned(100, 16));
+        b <= std_logic_vector(to_unsigned(101, 16));
         wait for 5ns;
-        
-        a <= '0';
-        b <= '0';
+    
+        a <= std_logic_vector(to_unsigned(100, 16));
+        b <= std_logic_vector(to_unsigned(60, 16));
         wait for 5ns;
-        
-        a <= '0';
-        b <= '0';
-        wait for 5ns;
+
     end process;
 
 end Behavioral;

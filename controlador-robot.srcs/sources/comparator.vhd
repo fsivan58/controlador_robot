@@ -33,22 +33,30 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity comparator is
     port (
-        A : in  std_logic_vector(21 downto 0);
-        B : in  std_logic_vector(21 downto 0);
+        A : in  std_logic_vector(15 downto 0);
+        B : in  std_logic_vector(15 downto 0);
         C : out std_logic
     );
 end comparator;
 
 architecture Behavioral of comparator is
-
+    component subtractor
+        port (
+            a     : in  std_logic_vector (15 downto 0);
+            b     : in  std_logic_vector(15 downto 0);
+            s     : out std_logic_vector (15 downto 0)
+        );
+    end component;
+    signal diff : std_logic_vector (15 downto 0);
+    signal zero : std_logic_vector (15 downto 0) := (others => '0');
 begin
 
-    process (A, B) begin
-        if B < A then
-            C <= '1';
-        else
-            C <= '0';
-        end if;
-    end process;
+    subtractor_inst : subtractor port map (
+        a => a,
+        b => b,
+        s => diff
+    );
+
+    C <= '0' when diff = zero or diff(15) = '1' else '1';
 
 end Behavioral;

@@ -34,17 +34,17 @@ use ieee.numeric_std.all;
 
 entity prueba1 is
     port (
-       clk_in : in std_logic;
+       clk_in : in  std_logic;
        echo   : in  std_logic;
-       trig   : out std_logic
+       trig   : out std_logic_vector(15 downto 0)
     );
 end prueba1;
 
 architecture Behavioral of prueba1 is
     component clock is
         port (
-            clk_in  : in  std_logic;
-            reset  : in  std_logic;
+            clk     : in  std_logic;
+            reset   : in  std_logic;
             clk_out : out std_logic 
         );
     end component;
@@ -58,15 +58,15 @@ architecture Behavioral of prueba1 is
     end component;
     component comparator
         port (
-            A : in  std_logic_vector(21 downto 0);
-            B : in  std_logic_vector(21 downto 0);
+            A : in  std_logic_vector(15 downto 0);
+            B : in  std_logic_vector(15 downto 0);
             C : out std_logic
         );
     end component;
-    signal clk, nRST, C_1, C_2, enable : std_logic;
-    signal counter_output : std_logic_vector (21 downto 0);
-    signal A_1 : std_logic_vector (21 downto 0) := std_logic_vector(to_unsigned(60, 22)); -- CAMBIAR 60 POR 60_000
-    signal A_2 : std_logic_vector (21 downto 0) := std_logic_vector(to_unsigned(10, 22));
+    signal clk_out, nRST, C_1, C_2, enable : std_logic;
+    signal counter_output : std_logic_vector (15 downto 0);
+    signal A_1 : std_logic_vector (15 downto 0) := std_logic_vector(to_unsigned(60, 16)); -- CAMBIAR 60 POR 60_000
+    signal A_2 : std_logic_vector (15 downto 0) := std_logic_vector(to_unsigned(10, 16));
 begin
 
     nRST <= not C_1;
@@ -74,32 +74,32 @@ begin
 
     clock_inst : clock
         port map (
-            clk_in => clk_in,
+            clk => clk_in,
             reset => '0',
-            clk_out => clk
+            clk_out => clk_out
         );
 
     counter_inst : counter
-        generic map (22)
+        generic map (16)
         port map (
-            clk => clk,
+            clk => clk_out,
             nRST => nRST,
-            counter_output => counter_output
+            counter_output => trig
         );
 
-    comparator_inst_1 : comparator
-        port map (
-            A => A_1,
-            B => counter_output,
-            C => C_1
-        );
+--    comparator_inst_1 : comparator
+--        port map (
+--            A => A_1,
+--            B => counter_output,
+--            C => C_1
+--        );
 
-    comparator_inst_2 : comparator
-        port map (
-            A => A_2,
-            B => counter_output,
-            C => trig
-        );
+--    comparator_inst_2 : comparator
+--        port map (
+--            A => A_2,
+--            B => counter_output,
+--            C => trig
+--        );
 
 
 end Behavioral;

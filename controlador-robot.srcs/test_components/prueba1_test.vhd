@@ -40,10 +40,11 @@ architecture Behavioral of prueba1_test is
         port (
            clk_in : in std_logic;
            echo : in std_logic;
-           trig   : out std_logic
+           trig   : out std_logic_vector(15 downto 0)
         );
     end component;
-    signal clk_in, echo, trig : std_logic;
+    signal clk_in, echo : std_logic;
+    signal trig : std_logic_vector(15 downto 0);
 begin
 
     prueba1_simul : prueba1

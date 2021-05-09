@@ -53,6 +53,6 @@ begin
             count <= count + 1;
         end if;
     end process;
-    counter_output <= std_logic_vector(to_unsigned(count, 22));
+    counter_output <= std_logic_vector(to_unsigned(count, n));
 
 end Behavioral;

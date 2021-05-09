@@ -46,11 +46,11 @@ architecture Behavioral of counter_test is
         );
     end component;
     signal clk, nRST  : std_logic;
-    signal counter_output : std_logic_vector (21 downto 0);
+    signal counter_output : std_logic_vector (15 downto 0);
     signal count : integer := 0;
 begin
     counter_simul :
-        counter generic map (22)
+        counter generic map (16)
         port map (
             clk => clk,
             nRST => nRST,
