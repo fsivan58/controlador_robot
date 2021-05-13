@@ -38,20 +38,21 @@ end comparator_test;
 
 architecture Behavioral of comparator_test is
     component comparator
+        generic (k : integer := 16);
         port (
-            A : in  std_logic_vector(15 downto 0);
-            B : in  std_logic_vector(15 downto 0);
+            A : in  std_logic_vector(k-1 downto 0);
+            B : in  std_logic_vector(k-1 downto 0);
             C : out std_logic
         );
     end component;
-    signal A : std_logic_vector (15 downto 0) := (
+    signal A : std_logic_vector (16 downto 0) := (
         0 => '0',
         1 => '1',
         2 => '0',
         3 => '1',
         others => '0'
     );
-    signal B : std_logic_vector (15 downto 0) := (others => '0');
+    signal B : std_logic_vector (16 downto 0) := (others => '0');
     signal C : std_logic;
     signal counter : integer := 0;
 begin

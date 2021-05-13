@@ -38,13 +38,14 @@ end subtractor_test;
 
 architecture Behavioral of subtractor_test is
     component subtractor
+        generic (k : integer := 16);
         port (
-            a     : in  std_logic_vector (15 downto 0);
-            b     : in  std_logic_vector(15 downto 0);
-            s     : out std_logic_vector (15 downto 0)
+            a : in  std_logic_vector (k-1 downto 0);
+            b : in  std_logic_vector(k-1 downto 0);
+            s : out std_logic_vector (k-1 downto 0)
         );
     end component;
-    signal a, b, s: std_logic_vector (15 downto 0);
+    signal a, b, s: std_logic_vector (16 downto 0);
 begin
 
     subtractor_simul: component subtractor port map (

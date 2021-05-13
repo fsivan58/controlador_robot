@@ -37,17 +37,19 @@ end prueba1_test;
 
 architecture Behavioral of prueba1_test is
     component prueba1
+        generic (k : integer := 16);
         port (
            clk_in : in std_logic;
-           echo : in std_logic;
-           trig   : out std_logic_vector(15 downto 0)
+           echo   : in std_logic;
+           trig   : out std_logic
         );
     end component;
     signal clk_in, echo : std_logic;
-    signal trig : std_logic_vector(15 downto 0);
+    signal trig : std_logic;
 begin
 
     prueba1_simul : prueba1
+        generic map (17)
         port map (
             clk_in => clk_in,
             echo => echo,
@@ -56,17 +58,18 @@ begin
 
     process begin
         clk_in <= '0';
-        wait for 5ns;
+        wait for 10ns;
         clk_in <= '1';
-        wait for 5ns;
+        wait for 10ns;
     end process;
  
     process begin
         echo <= '0';
-        wait for 30us;
+        wait for 900us;
         echo <= '1';
-        wait for 10us;
+        wait for 174us;
         echo <= '0';
+        wait;
     end process;
 
 end Behavioral;

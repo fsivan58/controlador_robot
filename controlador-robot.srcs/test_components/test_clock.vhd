@@ -51,7 +51,7 @@ architecture testbench of test_clock is
 
 begin
 
-clocksimul : clock generic map (FREQ_G => 1_000_000)  
+clocksimul : clock generic map (FREQ_G => 1_000_000)
         port map (
         clk  => clk,
         reset => reset,

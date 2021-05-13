@@ -33,15 +33,19 @@ use ieee.numeric_std.all;
 --use UNISIM.VComponents.all;
 
 entity prueba1 is
+    generic (k : integer := 16);
     port (
        clk_in : in  std_logic;
        echo   : in  std_logic;
-       trig   : out std_logic_vector(15 downto 0)
+       trig   : out std_logic
     );
 end prueba1;
 
 architecture Behavioral of prueba1 is
     component clock is
+        generic (
+            FREQ_G : integer := 10        -- -- Operating frequency in Hz.
+        );
         port (
             clk     : in  std_logic;
             reset   : in  std_logic;
@@ -57,22 +61,24 @@ architecture Behavioral of prueba1 is
         );
     end component;
     component comparator
+        generic (k : integer := 17);
         port (
-            A : in  std_logic_vector(15 downto 0);
-            B : in  std_logic_vector(15 downto 0);
+            A : in  std_logic_vector(k-1 downto 0);
+            B : in  std_logic_vector(k-1 downto 0);
             C : out std_logic
         );
     end component;
     signal clk_out, nRST, C_1, C_2, enable : std_logic;
-    signal counter_output : std_logic_vector (15 downto 0);
-    signal A_1 : std_logic_vector (15 downto 0) := std_logic_vector(to_unsigned(60, 16)); -- CAMBIAR 60 POR 60_000
-    signal A_2 : std_logic_vector (15 downto 0) := std_logic_vector(to_unsigned(10, 16));
+    signal counter_output : std_logic_vector (k-1 downto 0);
+    signal A_1 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(60_000, k)); -- CAMBIAR 60 POR 60_000
+    signal A_2 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(10, k));
 begin
 
     nRST <= not C_1;
     enable <= not echo;
 
     clock_inst : clock
+        generic map (FREQ_G => 1_000_000)
         port map (
             clk => clk_in,
             reset => '0',
@@ -80,26 +86,28 @@ begin
         );
 
     counter_inst : counter
-        generic map (16)
+        generic map (k)
         port map (
             clk => clk_out,
             nRST => nRST,
-            counter_output => trig
+            counter_output => counter_output
         );
 
---    comparator_inst_1 : comparator
---        port map (
---            A => A_1,
---            B => counter_output,
---            C => C_1
---        );
+    comparator_inst_1 : comparator
+        generic map (k)
+        port map (
+            A => A_1,
+            B => counter_output,
+            C => C_1
+        );
 
---    comparator_inst_2 : comparator
---        port map (
---            A => A_2,
---            B => counter_output,
---            C => trig
---        );
+    comparator_inst_2 : comparator
+        generic map (k)
+        port map (
+            A => A_2,
+            B => counter_output,
+            C => trig
+        );
 
 
 end Behavioral;

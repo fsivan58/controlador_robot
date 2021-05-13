@@ -33,10 +33,11 @@ use ieee.std_logic_signed.all;
 --use UNISIM.VComponents.all;
 
 entity subtractor is
+    generic (k : integer := 16);
     port (
-        a     : in  std_logic_vector (15 downto 0);
-        b     : in  std_logic_vector(15 downto 0);
-        s     : out std_logic_vector (15 downto 0)
+        a : in  std_logic_vector (k-1 downto 0);
+        b : in  std_logic_vector(k-1 downto 0);
+        s : out std_logic_vector (k-1 downto 0)
     );
 end subtractor;
 
