@@ -65,12 +65,13 @@ architecture Behavioral of prueba1 is
     component comparator
         generic (k : integer := 17);
         port (
-            A : in  std_logic_vector(k-1 downto 0);
-            B : in  std_logic_vector(k-1 downto 0);
-            C : out std_logic
+            A      : in  std_logic_vector(k-1 downto 0);
+            B      : in  std_logic_vector(k-1 downto 0);
+            C      : out std_logic
         );
     end component;
     signal clk_out, nRST, C_1, C_2, enable : std_logic;
+    signal dist_aux : std_logic := '0';
     signal counter_output, distance : std_logic_vector (k-1 downto 0);
     signal A_1 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(60_000, k)); -- CAMBIAR 60 POR 60_000
     signal A_2 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(10, k));
@@ -79,6 +80,7 @@ begin
 
     nRST <= not C_1;
     enable <= echo;
+    dist <= not echo and dist_aux;
 
     clock_inst : clock
         generic map (FREQ_G => 1_000_000)
@@ -96,14 +98,14 @@ begin
             enable => '1',
             counter_output => counter_output
         );
-     
+
     counter_dist : counter
         generic map(k)
         port map (
             clk => clk_out,
             nRST => nRST,
             enable => enable,
-            counter_output => distance   
+            counter_output => distance
         );
 
     comparator_inst_1 : comparator
@@ -121,13 +123,13 @@ begin
             B => counter_output,
             C => trig
         );
-        
+ 
      comparator_inst_3 : comparator
         generic map (k)
         port map (
             A => A_3,
             B => distance,
-            C => dist
+            C => dist_aux
         );
 
 end Behavioral;

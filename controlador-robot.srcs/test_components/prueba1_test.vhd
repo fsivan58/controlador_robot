@@ -68,7 +68,7 @@ begin
         echo <= '0';
         wait for 900us;
         echo <= '1';
-        wait for 174us;
+        wait for 150us;
         echo <= '0';
         wait;
     end process;

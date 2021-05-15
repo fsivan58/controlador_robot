@@ -1,11 +1,11 @@
 0.7
 2020.2
 Nov 18 2020
-09:20:35
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/sources/clock.vhd,1620933071,vhdl,,,,clock,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/sources/comparator.vhd,1620930712,vhdl,,,,comparator,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/sources/counter.vhd,1620932716,vhdl,,,,counter,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/sources/prueba1.vhd,1620933610,vhdl,,,,prueba1,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/sources/subtractor.vhd,1620930712,vhdl,,,,subtractor,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/test_components/comparator_test.vhd,1620560938,vhdl,,,,comparator_test,,,,,,,,
-/home/ivan/workspace/controlador_robot/controlador-robot.srcs/test_components/prueba1_test.vhd,1621071842,vhdl,,,,prueba1_test,,,,,,,,
+09:47:47
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/sources/clock.vhd,1621070966,vhdl,,,,clock,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/sources/comparator.vhd,1621083155,vhdl,,,,comparator,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/sources/counter.vhd,1621072192,vhdl,,,,counter,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/sources/prueba1.vhd,1621084247,vhdl,,,,prueba1,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/sources/subtractor.vhd,1621072192,vhdl,,,,subtractor,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/test_components/comparator_test.vhd,1621083249,vhdl,,,,comparator_test,,,,,,,,
+C:/Users/Iván/Workspace/controlador_robot/controlador-robot.srcs/test_components/prueba1_test.vhd,1621084161,vhdl,,,,prueba1_test,,,,,,,,
