@@ -37,6 +37,7 @@ entity counter is
     port(
         clk            : in  std_logic;
         nRST           : in  std_logic;
+        enable         : in  std_logic;
         counter_output : out std_logic_vector (n-1 downto 0)
     );
 end counter;
@@ -49,7 +50,7 @@ begin
         if nRST = '1' then
             count <= 0;
         end if;
-        if rising_edge(clk) then
+        if rising_edge(clk) and enable = '1' then
             count <= count + 1;
         end if;
     end process;

@@ -37,7 +37,8 @@ entity prueba1 is
     port (
        clk_in : in  std_logic;
        echo   : in  std_logic;
-       trig   : out std_logic
+       trig   : out std_logic;
+       dist   : out std_logic
     );
 end prueba1;
 
@@ -57,6 +58,7 @@ architecture Behavioral of prueba1 is
         port (
             clk            : in  std_logic;
             nRST           : in  std_logic;
+            enable         : in  std_logic;
             counter_output : out std_logic_vector (n-1 downto 0)
         );
     end component;
@@ -69,13 +71,14 @@ architecture Behavioral of prueba1 is
         );
     end component;
     signal clk_out, nRST, C_1, C_2, enable : std_logic;
-    signal counter_output : std_logic_vector (k-1 downto 0);
+    signal counter_output, distance : std_logic_vector (k-1 downto 0);
     signal A_1 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(60_000, k)); -- CAMBIAR 60 POR 60_000
     signal A_2 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(10, k));
+    signal A_3 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(158, k));
 begin
 
     nRST <= not C_1;
-    enable <= not echo;
+    enable <= echo;
 
     clock_inst : clock
         generic map (FREQ_G => 1_000_000)
@@ -90,7 +93,17 @@ begin
         port map (
             clk => clk_out,
             nRST => nRST,
+            enable => '1',
             counter_output => counter_output
+        );
+     
+    counter_dist : counter
+        generic map(k)
+        port map (
+            clk => clk_out,
+            nRST => nRST,
+            enable => enable,
+            counter_output => distance   
         );
 
     comparator_inst_1 : comparator
@@ -108,6 +121,13 @@ begin
             B => counter_output,
             C => trig
         );
-
+        
+     comparator_inst_3 : comparator
+        generic map (k)
+        port map (
+            A => A_3,
+            B => distance,
+            C => dist
+        );
 
 end Behavioral;

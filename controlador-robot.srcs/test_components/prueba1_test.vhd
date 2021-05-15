@@ -41,11 +41,11 @@ architecture Behavioral of prueba1_test is
         port (
            clk_in : in std_logic;
            echo   : in std_logic;
-           trig   : out std_logic
+           trig   : out std_logic;
+           dist   : out std_logic
         );
     end component;
-    signal clk_in, echo : std_logic;
-    signal trig : std_logic;
+    signal clk_in, echo, trig, dist : std_logic;
 begin
 
     prueba1_simul : prueba1
@@ -53,7 +53,8 @@ begin
         port map (
             clk_in => clk_in,
             echo => echo,
-            trig => trig
+            trig => trig,
+            dist => dist
         );
 
     process begin

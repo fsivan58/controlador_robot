@@ -42,10 +42,11 @@ architecture Behavioral of counter_test is
         port(
             clk            : in  std_logic;
             nRST           : in  std_logic;
+            enable         : in  std_logic;
             counter_output : out std_logic_vector (n-1 downto 0)
         );
     end component;
-    signal clk, nRST  : std_logic;
+    signal clk, nRST, enable : std_logic;
     signal counter_output : std_logic_vector (15 downto 0);
     signal count : integer := 0;
 begin
@@ -54,6 +55,7 @@ begin
         port map (
             clk => clk,
             nRST => nRST,
+            enable => enable,
             counter_output => counter_output
         );
     
