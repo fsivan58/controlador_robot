@@ -1,0 +1,11 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../controlador-robot.srcs/sources/clock.vhd" \
+"../../../../controlador-robot.srcs/sources/comparator.vhd" \
+"../../../../controlador-robot.srcs/sources/counter.vhd" \
+"../../../../controlador-robot.srcs/sources/prueba1.vhd" \
+"../../../../controlador-robot.srcs/sources/subtractor.vhd" \
+"../../../../controlador-robot.srcs/test_components/prueba1_test.vhd" \
+
+# Do not sort compile order
+nosort

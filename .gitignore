@@ -1,3 +1,4 @@
+
 Proyecto/RobotMovil/RobotMovil.runs/
 Proyecto/RobotMovil/RobotMovil.cache/
 Proyecto/RobotMovil/vivado_11096.backup.jou
@@ -7,4 +8,10 @@ Proyecto/RobotMovil/RobotMovil.sim/
 Proyecto/RobotMovil/vivado_11096.backup.log
 *.jou
 *.log
+
+controlador-robot.runs/*
+controlador-robot.cache/*
+controlador-robot.sim/*
+*.log
+*.jou
 *.str
