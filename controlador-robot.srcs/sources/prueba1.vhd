@@ -38,7 +38,9 @@ entity prueba1 is
        clk_in : in  std_logic;
        echo   : in  std_logic;
        trig   : out std_logic;
-       dist   : out std_logic
+       dist   : out std_logic;
+       display_out     : out std_logic_vector (6 downto 0);
+       pos_out         : out STD_LOGIC
     );
 end prueba1;
 
@@ -70,12 +72,25 @@ architecture Behavioral of prueba1 is
             C      : out std_logic
         );
     end component;
+    
+    
+    component led7semg
+    Port ( n_input  : in bit_vector (3 downto 0);
+           pos      : in STD_LOGIC;
+           display  : out std_logic_vector (6 downto 0);
+           pos_out : out STD_LOGIC);
+    end component;
+    
+    
+ -- Signals   
     signal clk_out, nRST, C_1, C_2, enable : std_logic;
     signal dist_aux : std_logic := '0';
     signal counter_output, distance : std_logic_vector (k-1 downto 0);
     signal A_1 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(60_000, k)); -- CAMBIAR 60 POR 60_000
     signal A_2 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(10, k));
     signal A_3 : std_logic_vector (k-1 downto 0) := std_logic_vector(to_unsigned(158, k));
+    
+    SIGNAL w_clk_int, w_reset, w_clk_out : STD_LOGIC;
 begin
 
     nRST <= not C_1;
@@ -131,5 +146,7 @@ begin
             B => distance,
             C => dist_aux
         );
+        
+        led7 : led7semg PORT MAP (n_input => "0001", pos=>'1', display => display_out, pos_out=>pos_out) ;
 
 end Behavioral;
