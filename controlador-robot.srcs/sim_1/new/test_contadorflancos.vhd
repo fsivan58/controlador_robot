@@ -68,8 +68,7 @@ process begin
 end process;
 
 process begin
-
-    if(end_count='1') then
+      if(end_count='1') then
       reset <= '1';
       wait for 60ns;
       reset <= '0';

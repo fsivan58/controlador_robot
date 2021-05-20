@@ -60,7 +60,6 @@ if(reset ='1') then
 else
 -- Si no esta ocupado entra
 if (ocupado < 2) then
-    if(clk'event) then
            -- Detecta flanco de subida
         if flanco = '1' then    
           if(ocupado=0) then
@@ -77,7 +76,7 @@ if (ocupado < 2) then
              end if;
             count_low <= count_low+1;
         end if; 
-    end if;
+
 end if;
 end if;
 

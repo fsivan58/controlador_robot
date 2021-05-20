@@ -41,21 +41,23 @@ end ContadorPulsos;
 
 architecture Behavioral of ContadorPulsos is
  signal count : integer := 0;
+  signal end_counter_int : STD_LOGIC := '0';
 begin
 
 process (pulso) begin
         if rising_edge(pulso) then
          if count = n-1 then
             count <= 0;
-            end_counter <= '1';
+            end_counter_int <= '1';
          else
-            end_counter <='0';
+            end_counter_int <='0';
             count <= count + 1;
             end if;     
         end if;
 end process;
     
 vector <= std_logic_vector(to_unsigned(count, n));
+end_counter <= end_counter_int;
 
 end Behavioral;
 
