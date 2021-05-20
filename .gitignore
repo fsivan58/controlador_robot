@@ -15,3 +15,8 @@ controlador-robot.sim/*
 *.log
 *.jou
 *.str
+Proyecto/RobotMovil/RobotMovil.cache/
+Proyecto/RobotMovil/RobotMovil.runs/
+Proyecto/RobotMovil/RobotMovil.sim/sim_1/behav/
+Proyecto/RobotMovil/RobotMovil.sim/test_components/behav/
+Proyecto/RobotMovil/RobotMovil.sim/test_components/synth/
