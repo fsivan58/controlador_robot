@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 22.04.2021 18:30:33
+-- Create Date: 20.05.2021 00:20:33
 -- Design Name: 
--- Module Name: counter - Behavioral
+-- Module Name: colorselector - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,28 +32,38 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity counter is
-    generic(n : positive := 10);
-    port(
-        clk            : in  std_logic;
-        nRST           : in  std_logic;
-        enable         : in  std_logic;
-        counter_output : out std_logic_vector (n-1 downto 0)
-    );
-end counter;
+entity colorselector is
+  Port ( color : in bit_vector(1 downto 0);
+         s2 : out STD_LOGIC;
+         s3 : out STD_LOGIC
+ );
+end colorselector;
 
-architecture Behavioral of counter is
-    signal count : integer := 0;
+architecture Behavioral of colorselector is
+
 begin
 
-    process (clk, nRST, enable) begin
-        if nRST = '1' then
-            count <= 0;
-        end if;
-        if rising_edge(clk) and enable = '1' then
-            count <= count + 1;
-        end if;
-    end process;
-    counter_output <= std_logic_vector(to_unsigned(count, n));
+PROCESS (color) BEGIN 
+
+CASE color is
+    when "00" => 
+     -- rojo
+     s2 <='0';
+     s3 <= '0';
+   when "01" => 
+   -- VERDE
+     s2 <='1';
+     s3 <= '1';
+   when "10" => 
+   -- azul
+     s2 <='0';
+     s3 <= '1';
+   when OTHERS=> 
+   -- SIN FILTRO
+     s2 <='1';
+     s3 <= '0';
+END CASE;
+
+end PROCESS;
 
 end Behavioral;
