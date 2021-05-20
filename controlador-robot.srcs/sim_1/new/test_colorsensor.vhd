@@ -45,11 +45,14 @@ architecture testbench of test_colorsensor is
            s0 : out STD_LOGIC;
            s1 : out STD_LOGIC;
            s2 : out STD_LOGIC;
-           s3 : out STD_LOGIC );
+           s3 : out STD_LOGIC;
+           vector_filtro : out bit_vector(1 downto 0) );
  end component;
    
      -- Externas
- signal s0, s1, s2, s3, clk, serial_color, de_l, mstart: STD_LOGIC;
+ signal s0, s1,  s2, s3,  clk, de_l, serial_color, mstart: STD_LOGIC;
+ signal vector_filtro: bit_vector(1 downto 0);
+ 
 
 begin
 
@@ -62,7 +65,8 @@ begin
             s0 => s0,
             s1 => s1,
             s2 => s2,
-            s3 => s3
+            s3 => s3,
+            vector_filtro => vector_filtro
         );
 
 process  begin
@@ -77,7 +81,7 @@ process  begin
     mstart <= '0';
     wait for 50ns;
     mstart <= '1';
-    wait for 200ns;
+    wait for 120ns;
 end process;
 
 process  begin
@@ -96,15 +100,6 @@ process  begin
         wait for 20ns;
         serial_color <= '0';
         wait for 20ns;
-        serial_color <= '1';
-        wait for 20ns;
-        serial_color <= '0';
-        wait for 20ns;
-        serial_color <= '1';
-        wait for 20ns;
-        serial_color <= '0';
-        wait for 20ns;
-       
     end if;
     
   
