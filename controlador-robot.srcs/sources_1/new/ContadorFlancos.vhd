@@ -45,47 +45,57 @@ end ContadorFlancos;
 architecture Behavioral of ContadorFlancos is
  signal   count_hight   : integer   range 0 to 50_000_000 :=0;
  signal   count_low     : integer   range 0 to 50_000_000 :=0;
- signal ocupado: integer  range 0 to 2 :=0;
+ SIGNAL ESTADO : integer:= 0;
 begin
-
-contador_flanco: process (flanco, clk, reset)
-
-begin
-
-if(reset ='1') then
-    ocupado <=0;
-    count_hight <= 0;
-    count_low <= 0;
-    end_count <='0';
-else
--- Si no esta ocupado entra
-if (ocupado < 2) then
-           -- Detecta flanco de subida
-        if flanco = '1' then    
-          if(ocupado=0) then
-                count_hight <= count_hight+1;
-          elsif ocupado =1 then
-                ocupado <=2;
-                end_count <='1';
-          end if;
-        end if;
-        
-        if flanco = '0' then
-            if(ocupado=0) then
-                ocupado <= 1;
-             end if;
-            count_low <= count_low+1;
-        end if; 
-
-end if;
-end if;
-
-
-
-
-end process;
 
 timeH <= count_hight;
 timeD <= count_low;
 
+contador_flanco: process ( flanco, clk, reset)
+begin
+    if(reset ='1') then
+        ESTADO <= 0;
+        count_hight <= 0;
+        count_low <= 0;
+        end_count <='0';
+    elsif clk'event then
+        if ESTADO < 2 then
+              if flanco = '1' then
+                if( ESTADO = 1) then
+                    ESTADO <= 2;
+                    end_count <='1';
+                else
+                    count_hight <= count_hight+1;
+                    end_count <='0';
+                end if;
+              else 
+                ESTADO <= 1;
+                count_low <= count_low+1;
+              end if;
+        end if;
+    end if;
+
+end process;
+
+
+
 end Behavioral;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -75,8 +75,6 @@ architecture Behavioral of colorsensor is
      
 begin
 
-
-
  comp_colorselector : colorselector
         port map (
             color => type_color,

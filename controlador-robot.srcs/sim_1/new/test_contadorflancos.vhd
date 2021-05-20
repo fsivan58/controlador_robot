@@ -46,12 +46,13 @@ component ContadorFlancos
            end_count : out STD_LOGIC
            );
 end component;
-    signal clk, flanco, end_count, reset: STD_LOGIC;
+
+    signal clk, flanco, end_count_out, reset: STD_LOGIC;
     signal timeD_O, timeH_O: integer;
 
 begin
 
-flancos_comp : ContadorFlancos port map (clk  => clk, reset=>reset, flanco=>flanco, timeH =>timeH_O, timeD =>timeD_O, end_count=> end_count );
+flancos_comp : ContadorFlancos port map (clk  => clk, reset=>reset, flanco=>flanco, timeH =>timeH_O, timeD =>timeD_O, end_count=> end_count_out );
 
 process begin
      clk <= '1';
@@ -68,14 +69,13 @@ process begin
 end process;
 
 process begin
-      if(end_count='1') then
+   if(end_count_out = '1') then
       reset <= '1';
-      wait for 60ns;
+    wait for 60ns;
       reset <= '0';
     end if;
-     wait for 20ns;
+    wait for 20ns;
 end process;
-
 
 end testbench;
 
