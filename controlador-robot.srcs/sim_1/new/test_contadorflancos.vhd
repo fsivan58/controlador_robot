@@ -39,17 +39,19 @@ architecture testbench of test_contadorflancos is
 
 component ContadorFlancos
     Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
            flanco : in STD_LOGIC;
            timeH :  out integer;
-           timeD : out integer
+           timeD : out integer;
+           end_count : out STD_LOGIC
            );
 end component;
-    signal clk, flanco: STD_LOGIC;
+    signal clk, flanco, end_count, reset: STD_LOGIC;
     signal timeD_O, timeH_O: integer;
 
 begin
 
-flancos_comp : ContadorFlancos port map (clk  => clk, flanco=>flanco, timeH =>timeH_O, timeD =>timeD_O );
+flancos_comp : ContadorFlancos port map (clk  => clk, reset=>reset, flanco=>flanco, timeH =>timeH_O, timeD =>timeD_O, end_count=> end_count );
 
 process begin
      clk <= '1';
@@ -64,6 +66,16 @@ process begin
      flanco <= '0';
      wait for 40ns;
 end process;
+
+process begin
+      if(end_count='1') then
+      reset <= '1';
+      wait for 60ns;
+      reset <= '0';
+    end if;
+     wait for 20ns;
+end process;
+
 
 end testbench;
 

@@ -34,9 +34,11 @@ use IEEE.numeric_std.all;
 
 entity ContadorFlancos is
     Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
            flanco : in STD_LOGIC;
            timeH :  out integer;
-           timeD : out integer
+           timeD : out integer;
+           end_count : out STD_LOGIC
            );
 end ContadorFlancos;
 
@@ -46,17 +48,25 @@ architecture Behavioral of ContadorFlancos is
  signal ocupado: integer  range 0 to 2 :=0;
 begin
 
-contador_flanco: process (flanco, clk)
+contador_flanco: process (flanco, clk, reset)
 
 begin
+
+if(reset ='1') then
+    ocupado <=0;
+    count_hight <= 0;
+    count_low <= 0;
+    end_count <='0';
+else
+-- Si no esta ocupado entra
 if (ocupado < 2) then
-    if(clk'event) then
            -- Detecta flanco de subida
         if flanco = '1' then    
           if(ocupado=0) then
                 count_hight <= count_hight+1;
           elsif ocupado =1 then
                 ocupado <=2;
+                end_count <='1';
           end if;
         end if;
         
@@ -66,14 +76,16 @@ if (ocupado < 2) then
              end if;
             count_low <= count_low+1;
         end if; 
-    end if;
+
 end if;
+end if;
+
+
+
 
 end process;
 
---timeH <= std_logic_vector(to_unsigned(count_hight, timeH'length));
 timeH <= count_hight;
 timeD <= count_low;
---timeD <= std_logic_vector(to_unsigned(count_low, timeD'length));
 
 end Behavioral;
