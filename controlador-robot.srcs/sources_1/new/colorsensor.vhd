@@ -111,20 +111,7 @@ type_color_input(1) <= to_bit(vector_contador(1));
 
 vector_filtro <= type_color_input;
 
-process (clk)
-begin
-case vector_contador is
-    when "00"=>
-    -- Red color
-    
-    when "01"=>
-    -- Green color
-    when "10"=>
-    -- Blue color
-end case;
 
-
-end process;
 
 
 
