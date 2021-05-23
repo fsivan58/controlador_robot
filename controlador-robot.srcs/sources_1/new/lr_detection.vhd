@@ -32,13 +32,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity lr_detection is
-    Port ( clk    : in    STD_LOGIC;
-           echo_l : in    STD_LOGIC;
-           echo_r : in    STD_LOGIC;
-           trig_l : inout STD_LOGIC;
-           trig_r : inout STD_LOGIC;
-           obs_l  : out   STD_LOGIC;
-           obs_r  : out   STD_LOGIC);
+    port ( clk    : in    std_logic;
+           echo_l : in    std_logic;
+           echo_r : in    std_logic;
+           trig_l : inout std_logic;
+           trig_r : inout std_logic;
+           obs_l  : out   std_logic;
+           obs_r  : out   std_logic);
 end lr_detection;
 
 architecture Behavioral of lr_detection is
