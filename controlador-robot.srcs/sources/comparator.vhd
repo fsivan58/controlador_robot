@@ -31,12 +31,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+-- 1 si B >= A
+
 entity comparator is
     generic (k : integer := 16);
     port (
-        A : in  std_logic_vector(k-1 downto 0);
-        B : in  std_logic_vector(k-1 downto 0);
-        C : out std_logic
+            A : in  std_logic_vector(k-1 downto 0);
+            B : in  std_logic_vector(k-1 downto 0);
+            C : out std_logic
     );
 end comparator;
 
@@ -44,9 +46,9 @@ architecture Behavioral of comparator is
     component subtractor
         generic (k : integer := 16);
         port (
-            a     : in  std_logic_vector (k-1 downto 0);
-            b     : in  std_logic_vector(k-1 downto 0);
-            s     : out std_logic_vector (k-1 downto 0)
+            a : in  std_logic_vector (k-1 downto 0);
+            b : in  std_logic_vector(k-1 downto 0);
+            s : out std_logic_vector (k-1 downto 0)
         );
     end component;
     signal diff : std_logic_vector (k-1 downto 0);
@@ -54,13 +56,14 @@ architecture Behavioral of comparator is
 begin
 
     subtractor_inst : subtractor
-    generic map (k)
-    port map (
-        a => a,
-        b => b,
-        s => diff
-    );
+        generic map (k)
+        port map (
+            a => a,
+            b => b,
+            s => diff
+        );
 
-    C <= '0' when diff = zero or diff(k-1) = '1' else '1';
+    C <= '0' when diff = zero or diff(k-1) = '1'
+             else '1';
 
 end Behavioral;

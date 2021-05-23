@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../controlador-robot.srcs/sources/clock.vhd" \
-"../../../../controlador-robot.srcs/test_components/test_clock.vhd" \
-
-# Do not sort compile order
-nosort

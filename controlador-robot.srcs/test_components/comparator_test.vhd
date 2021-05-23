@@ -40,9 +40,9 @@ architecture Behavioral of comparator_test is
     component comparator
         generic (k : integer := 16);
         port (
-            A : in  std_logic_vector(k-1 downto 0);
-            B : in  std_logic_vector(k-1 downto 0);
-            C : out std_logic
+            A      : in  std_logic_vector(k-1 downto 0);
+            B      : in  std_logic_vector(k-1 downto 0);
+            C      : out std_logic
         );
     end component;
     signal A : std_logic_vector (16 downto 0) := (
@@ -57,14 +57,16 @@ architecture Behavioral of comparator_test is
     signal counter : integer := 0;
 begin
 
-    comparator_simul : comparator port map (
+    comparator_simul : comparator
+    generic map(17)
+    port map (
         A => A,
         B => B,
         C => C
     );
 
     process begin
-        B <= std_logic_vector(to_unsigned(counter, 16));
+        B <= std_logic_vector(to_unsigned(counter, 17));
         counter <= counter + 1;
         wait for 1us;
     end process;

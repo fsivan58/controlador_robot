@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 22.04.2021 18:30:33
+-- Create Date: 20.05.2021 10:18:25
 -- Design Name: 
--- Module Name: counter - Behavioral
+-- Module Name: ContadorPulsos - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,28 +32,35 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity counter is
-    generic(n : positive := 10);
-    port(
-        clk            : in  std_logic;
-        nRST           : in  std_logic;
-        enable         : in  std_logic;
-        counter_output : out std_logic_vector (n-1 downto 0)
-    );
-end counter;
+entity ContadorPulsos is
+    generic(n : positive := 4);
+    Port ( pulso : in STD_LOGIC;
+           vector : out std_logic_vector (n-1 downto 0);
+           end_counter : out STD_LOGIC );
+end ContadorPulsos;
 
-architecture Behavioral of counter is
-    signal count : integer := 0;
+architecture Behavioral of ContadorPulsos is
+ signal count : integer := 0;
+  signal end_counter_int : STD_LOGIC := '0';
 begin
 
-    process (clk, nRST, enable) begin
-        if nRST = '1' then
+process (pulso) begin
+        if rising_edge(pulso) then
+         if count = n-1 then
             count <= 0;
-        end if;
-        if rising_edge(clk) and enable = '1' then
+            end_counter_int <= '1';
+         else
+            end_counter_int <='0';
             count <= count + 1;
+            end if;     
         end if;
-    end process;
-    counter_output <= std_logic_vector(to_unsigned(count, n));
+end process;
+    
+vector <= std_logic_vector(to_unsigned(count, n));
+end_counter <= end_counter_int;
 
 end Behavioral;
+
+
+
+
