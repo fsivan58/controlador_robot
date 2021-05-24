@@ -1,26 +1,7 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 13.05.2021 19:51:03
--- Design Name: 
--- Module Name: test_pwm - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -37,7 +18,50 @@ end test_pwm;
 
 architecture Behavioral of test_pwm is
 
+component pwm_prog
+    generic (
+        --FREQ_G       : real := 12.0; -- Operating frequency in MHz.
+        --SENSE_FREQ_G : real := 20.0; -- Number of times distance is sensed per second.
+        --DUTY : integer := 76 
+        DUTY : integer := 7 
+        ); -- default value is 76 = 30%
+    Port ( 
+        clk_i   : in  std_logic;            -- Input clock.
+        activo  : in  std_logic;            -- Activar Duty.
+        pwm : out STD_LOGIC
+    );
+end component;
+
+    signal clk, activo, salida : STD_LOGIC;
+    
 begin
+
+pwm_progsimul : pwm_prog generic map (DUTY => 7)
+        port map (
+          clk_i  => clk,
+          activo => activo,
+          pwm    => salida
+        );
+
+process begin
+    clk <= '1';
+    wait for 10ns;
+    clk <= '0';
+    wait for 10ns;
+end process;
+
+process begin
+    activo <= '1';
+    wait for 150 ns;
+    activo <= '0';
+    wait for 150 ns;
+    activo <= '1';
+    wait for 150 ns;
+    activo <= '0';
+    wait for 150 ns;
+end process;
 
 
 end Behavioral;
+
+
