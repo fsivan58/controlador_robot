@@ -41,14 +41,17 @@ architecture Behavioral of lr_detection_test is
             clk    : in    std_logic;
             echo_l : in    std_logic;
             echo_r : in    std_logic;
+            echo_f : in    std_logic;
             trig_l : inout std_logic;
             trig_r : inout std_logic;
+            trig_f : inout std_logic;
             obs_l  : out   std_logic;
-            obs_r  : out   std_logic
+            obs_r  : out   std_logic;
+            obs_f  : out   std_logic
         );
     end component;
-    signal clk, trig_l, trig_r, obs_l, obs_r : std_logic;
-    signal echo_l, echo_r : std_logic := '0';
+    signal clk, trig_l, trig_r, trig_f, obs_l, obs_r, obs_f : std_logic;
+    signal echo_l, echo_r, echo_f : std_logic := '0';
 begin
 
     lr_detection_test : lr_detection
@@ -56,10 +59,13 @@ begin
             clk => clk,
             echo_l => echo_l,
             echo_r => echo_r,
+            echo_f => echo_f,
             trig_l => trig_l,
             trig_r => trig_r,
+            trig_f => trig_f,
             obs_l => obs_l,
-            obs_r => obs_r
+            obs_r => obs_r,
+            obs_f => obs_f
         );
 
     process begin
@@ -70,18 +76,22 @@ begin
     end process;
     
     process begin
-        wait for 1ms;
+        wait for 30us;
         echo_l <= '1';
-        wait for 175us;
+        echo_f <= '1';
+        wait for 125us;
+        echo_f <= '0';
+        wait for 75us;
         echo_l <= '0';
         wait;
     end process;
     
     process begin
-        wait for 62ms;
+        wait for 80us;
         echo_r <= '1';
         wait for 100us;
         echo_r <= '0';
+        wait;
     end process;
 
 end Behavioral;
