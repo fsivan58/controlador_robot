@@ -149,11 +149,11 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
  led_right<= obj_right;  
  led_front<= obstacule_front; 
    
- motor_left  <=not enable_m_d;
- motor_right <=not enable_m_r;                             
+ motor_left  <= enable_m_d;
+ motor_right <= enable_m_r;                             
 
-led_m_l <= not enable_m_d;
-led_m_r <= not enable_m_r;
+led_m_l <= enable_m_d;
+led_m_r <= enable_m_r;
 
 
 end Behavioral;
