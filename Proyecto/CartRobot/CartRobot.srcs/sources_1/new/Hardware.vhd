@@ -85,6 +85,7 @@ component HardwareUltraSonido is
        obst_front   : out std_logic;
        obst_left    : out std_logic;
        obst_right   : out std_logic;
+       shock        : out std_logic;
        distance : out integer range 0 to 999
    );
 end component;
@@ -110,12 +111,13 @@ component CLOCK is
     );
 end component;
 
-signal obstacule_front,obj_left, obj_right: std_logic :='0';
+signal obstacule_front, obj_left, obj_right, stop_control: std_logic :='0';
 signal clock_display : STD_LOGIC;
 signal m_number : integer range 0 to 999 :=0;
 
 
-signal enable_m_d,  enable_m_r: STD_LOGIC;
+signal enable_m_d,  enable_m_r, shock: STD_LOGIC;
+
 begin
 
 
@@ -135,15 +137,38 @@ m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA,
                                                 obst_front=>obstacule_front,
                                                 obst_left=>obj_left,
                                                 obst_right=> obj_right,
+                                                shock  => shock,
                                                 distance => m_number
                                                 );
 
 m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      obj_left=>obj_left, 
                                      obj_right=>obj_right, 
-                                     stop=> obstacule_front,
+                                     stop=> stop_control,
                                      motor_left=>enable_m_d,
                                      motor_right=>enable_m_r );
+                                     
+process (CLK_FPGA) 
+begin
+if rising_edge(CLK_FPGA) then
+    if shock = '1' then
+         stop_control<='1'; -- Si se ha chocado distancia menor a 4 cm paro el coche
+    else 
+      if (obstacule_front = '1' ) then
+        if (obj_left  nand  obj_right) ='1' then
+             stop_control<='0';
+          else 
+             stop_control<='1';
+         end if;
+        else
+            stop_control<='0';
+      end if;
+    end if;
+end if;
+
+   
+
+end process;
                                      
  led_left<= obj_left;  
  led_right<= obj_right;  

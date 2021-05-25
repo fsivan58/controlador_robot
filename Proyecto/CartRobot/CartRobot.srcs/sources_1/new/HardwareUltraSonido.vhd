@@ -45,6 +45,7 @@ entity HardwareUltraSonido is
        obst_front   : out std_logic;
        obst_left    : out std_logic;
        obst_right   : out std_logic;
+       shock        : out std_logic;
        distance : out integer range 0 to 999
    );
 end HardwareUltraSonido;
@@ -66,6 +67,8 @@ end component;
 
 CONSTANT MIN_DISTANCE 		  : STD_LOGIC_VECTOR(8 DOWNTO 0) := "000001010"; 
 
+CONSTANT MIN_DISTANCE_LADOS   : STD_LOGIC_VECTOR(8 DOWNTO 0) := "000001110"; 
+
  signal dato_left_listo, dato_right_listo, dato_front_listo   : std_logic := '0';
  signal distancia_left,distancia_right, distancia_front : std_logic_vector(8 downto 0) := (others => '0');
  
@@ -83,7 +86,7 @@ process(CLK_FPGA)
 begin
 if rising_edge(CLK_FPGA) then
     if dato_left_listo = '1' then
-        if distancia_left < MIN_DISTANCE then -- 10cm en binario en 9 bits
+        if distancia_left < MIN_DISTANCE_LADOS then -- 10cm en binario en 9 bits
            obst_left <= '1';
         else
            obst_left <= '0';
@@ -99,7 +102,12 @@ begin
 if rising_edge(CLK_FPGA) then
     if dato_front_listo = '1' then
         if distancia_front < MIN_DISTANCE then -- 10cm en binario en 9 bits
-           obst_front <= '1';
+            obst_front <= '1';
+            if(distancia_front <= "000000011") then -- 4 cm en binario
+                shock <='1';
+            else 
+                 shock <='0';
+            end if;
         else
            obst_front <= '0';
         end if;
@@ -113,7 +121,7 @@ process(CLK_FPGA)
 begin
 if rising_edge(CLK_FPGA) then
     if dato_right_listo = '1' then
-        if distancia_right < MIN_DISTANCE then -- 10cm en binario en 9 bits
+        if distancia_right < MIN_DISTANCE_LADOS then -- 10cm en binario en 9 bits
            obst_right <= '1';
         else
            obst_right <= '0';
