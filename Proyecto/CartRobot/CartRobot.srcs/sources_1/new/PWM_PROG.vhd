@@ -68,9 +68,10 @@ end component;
     
 begin
 
--- m_pulso : CLOCK generic map (FREQ_G =>DUTY) port map (clk=> clk_i, reset =>enable_d, clk_out => pwm_signal); 
+m_pulso : CLOCK generic map (FREQ_G =>DUTY) port map (clk=> clk_i, reset =>enable_d, clk_out => pwm_signal); 
 
     enable_d<= not activo;
-    pwm <= enable_d;
+    -- TODO
+    pwm <= pwm_signal;
 
 end Behavioral;

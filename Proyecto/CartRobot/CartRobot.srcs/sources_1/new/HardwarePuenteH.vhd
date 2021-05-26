@@ -62,6 +62,8 @@ m_motor_left : PWM_PROG generic map (DUTY=> 50) port map (clk_i=>CLK_FPGA , acti
 m_motor_right : PWM_PROG generic map (DUTY=> 50) port map (clk_i=>CLK_FPGA , activo=>enable_right, pwm=>motor_right);
 
 process (CLK_FPGA, stop) begin 
+
+if(rising_edge(CLK_FPGA)) then
     if(stop='1') then
        enable_left <='0';
        enable_right <='0';
@@ -69,6 +71,9 @@ process (CLK_FPGA, stop) begin
       enable_left <=not obj_right; -- Activo a nivel alto si hay un objeto lo desactivo
       enable_right <=not obj_left; -- Activo a nivel alto si hay un objeto lo desactivo
     end if;
+end if;
+
+
 
 end process;
 
