@@ -58,8 +58,8 @@ signal enable_left : std_logic :='1';
 signal enable_right : std_logic :='1';
 
 begin
-m_motor_left : PWM_PROG generic map (DUTY=> 50) port map (clk_i=>CLK_FPGA , activo=>enable_left, pwm=>motor_left);
-m_motor_right : PWM_PROG generic map (DUTY=> 50) port map (clk_i=>CLK_FPGA , activo=>enable_right, pwm=>motor_right);
+m_motor_left : PWM_PROG generic map (DUTY=> 2048) port map (clk_i=>CLK_FPGA , activo=>enable_left, pwm=>motor_left);
+m_motor_right : PWM_PROG generic map (DUTY=> 2048) port map (clk_i=>CLK_FPGA , activo=>enable_right, pwm=>motor_right);
 
 process (CLK_FPGA, stop) begin 
 

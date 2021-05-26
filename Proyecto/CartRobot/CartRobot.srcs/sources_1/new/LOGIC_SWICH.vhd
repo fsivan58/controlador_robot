@@ -39,12 +39,16 @@ end LOGIC_SWICH;
 
 architecture Behavioral of LOGIC_SWICH is
 signal last_state : std_logic :='0';
+signal bloquedo : std_logic :='0';
 begin
 
 process (CLK_PGA) begin
  if rising_edge(CLK_PGA) then
-     if(sw_in ='0') then
-     last_state <= not last_state;
+     if bloquedo = '1' and sw_in ='1' then
+             bloquedo<='0';
+     elsif  bloquedo = '0' and sw_in ='0' then
+           bloquedo<='1';
+           last_state <= not last_state;
      end if;
  end if; 
 end process;
