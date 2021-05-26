@@ -23,7 +23,7 @@ component pwm_prog
         --FREQ_G       : real := 12.0; -- Operating frequency in MHz.
         --SENSE_FREQ_G : real := 20.0; -- Number of times distance is sensed per second.
         --DUTY : integer := 76 
-        DUTY : integer := 7 
+        DUTY : integer := 12 
         ); -- default value is 76 = 30%
     Port ( 
         clk_i   : in  std_logic;            -- Input clock.
@@ -36,7 +36,7 @@ end component;
     
 begin
 
-pwm_progsimul : pwm_prog generic map (DUTY => 7)
+pwm_progsimul : pwm_prog generic map (DUTY => 12)
         port map (
           clk_i  => clk,
           activo => activo,
@@ -52,13 +52,13 @@ end process;
 
 process begin
     activo <= '1';
-    wait for 150 ns;
+    wait for 10 us;
     activo <= '0';
-    wait for 150 ns;
+    wait for 500 ns;
     activo <= '1';
-    wait for 150 ns;
+    wait for 500 ns;
     activo <= '0';
-    wait for 150 ns;
+    wait for 4 us;
 end process;
 
 

@@ -8,7 +8,7 @@ entity pwm_prog is
         --FREQ_G       : real := 12.0; -- Operating frequency in MHz.
         --SENSE_FREQ_G : real := 20.0; -- Number of times distance is sensed per second.
         --DUTY : integer := 76 
-        DUTY : integer := 7 
+        DUTY : integer := 12 
         ); -- default value is 76 = 30%
     Port ( 
         clk_i   : in  std_logic;            -- Input clock.
@@ -27,15 +27,19 @@ architecture Behavioral of pwm_prog is
     
 begin
 
-    process(clk_i)
+    process(clk_i, activo)
     begin
-        if rising_edge(clk_i) then
-            if counter >= SENSE_PERIOD_C then
-                counter <= 0;
-            else
-                counter <= counter + 1;
+        if activo='0' then
+            counter <= 0;
+        else 
+            if rising_edge(clk_i) then
+                if counter >= SENSE_PERIOD_C then
+                    counter <= 0;
+                else
+                    counter <= counter + 1;
+                end if;
             end if;
-        end if;
+         end if;
     end process;
     
     --if activo = '1' then
