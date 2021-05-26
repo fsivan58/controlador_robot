@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity LOGIC_SWICH is
-    Port ( sw_in : in STD_LOGIC;
+    Port ( CLK_PGA : in STD_LOGIC;
+             sw_in : in STD_LOGIC;
            sw_out : out STD_LOGIC);
 end LOGIC_SWICH;
 
@@ -40,10 +41,12 @@ architecture Behavioral of LOGIC_SWICH is
 signal last_state : std_logic :='0';
 begin
 
-process (sw_in) begin
-    if rising_edge(sw_in) then
-    last_state <= not last_state;
-    end if;
+process (CLK_PGA) begin
+ if rising_edge(CLK_PGA) then
+     if(sw_in ='0') then
+     last_state <= not last_state;
+     end if;
+ end if; 
 end process;
 
 sw_out <= last_state;

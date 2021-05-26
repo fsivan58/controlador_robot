@@ -67,7 +67,8 @@ component CLOCK is
 end component;
 
 component LOGIC_SWICH is
-    Port ( sw_in : in STD_LOGIC;
+    Port (CLK_PGA : in STD_LOGIC;
+     sw_in : in STD_LOGIC;
            sw_out : out STD_LOGIC);
 end component;
 
@@ -78,15 +79,14 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      obj_left=>'0', 
                                      obj_right=>'0', 
                                      stop=> '0',
-                                     motor_left=>enable_m_d,
+                                     motor_left=>motor_left,
                                      motor_right=>enable_m_r );
                                      
- m_switch: LOGIC_SWICH port map (sw_in=>sw_in, sw_out=>led_m_l);                               
+ m_switch: LOGIC_SWICH port map (CLK_PGA=>CLK_FPGA, sw_in=>sw_in, sw_out=>led_m_l);                               
                                                                       
                        
- motor_left  <= '0'; -- Activo a nivel bajo
+
  motor_right <= enable_m_r; 
  
--- led_m_l <= enable_m_d;
 led_m_r <= enable_m_r;
 end Behavioral;
