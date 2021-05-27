@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Hardware is
     Port ( CLK_FPGA: in std_logic;
-    
+            sw_start : in STD_LOGIC;
             echo_left    : in  std_logic;
             echo_right   : in  std_logic;
             echo_front   : in  std_logic; 
@@ -54,7 +54,7 @@ entity Hardware is
               led_left : out std_logic;
               led_right : out std_logic; 
               
-               led_m_l : out std_logic;
+              led_m_l : out std_logic;
               led_m_r : out std_logic
            );
 end Hardware;
@@ -90,6 +90,12 @@ component HardwareUltraSonido is
    );
 end component;
 
+component LOGIC_SWICH is
+    Port (CLK_PGA : in STD_LOGIC;
+           sw_in : in STD_LOGIC;
+           sw_out : out STD_LOGIC);
+end component;
+
 component DISPLAY is
 Port (  clk : in STD_LOGIC;
         number : in integer;
@@ -110,20 +116,25 @@ component CLOCK is
         clk_out : out std_logic
     );
 end component;
+-- Ultra sonidos
+signal obstacule_front, obj_left, obj_right, shock, stop_control: std_logic :='0';
 
-signal obstacule_front, obj_left, obj_right, stop_control: std_logic :='0';
 signal clock_display : STD_LOGIC;
-signal m_number : integer range 0 to 999 :=0;
+signal m_distance : integer range 0 to 999 :=0;
 
+-- Puente H configuracion
+signal pwm_left,  pwm_right,  stop: STD_LOGIC;
 
-signal enable_m_d,  enable_m_r, shock: STD_LOGIC;
+-- Logic Swicth
+signal  start_stop : STD_LOGIC;
 
 begin
 
+ m_switch: LOGIC_SWICH port map (CLK_PGA=>CLK_FPGA, sw_in=>sw_start, sw_out=>start_stop);      
 
 m_clock_display : CLOCK generic map (FREQ_G =>120) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_display);
 
-m_display : Display port map (clk => clock_display, number => m_number, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
+m_display : Display port map (clk => clock_display, number => m_distance, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
 
 m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA, 
                                                 echo_left => echo_left, 
@@ -136,17 +147,17 @@ m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA,
                                                 
                                                 obst_front=>obstacule_front,
                                                 obst_left=>obj_left,
-                                                obst_right=> obj_right,
+                                                obst_right=>obj_right,
                                                 shock  => shock,
-                                                distance => m_number
+                                                distance => m_distance
                                                 );
 
 m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      obj_left=>obj_left, 
                                      obj_right=>obj_right, 
-                                     stop=> stop_control,
-                                     motor_left=>enable_m_d,
-                                     motor_right=>enable_m_r );
+                                     stop=> stop,
+                                     motor_left=>pwm_left,
+                                     motor_right=>pwm_right );
                                      
 process (CLK_FPGA) 
 begin
@@ -166,19 +177,27 @@ if rising_edge(CLK_FPGA) then
     end if;
 end if;
 
-   
-
 end process;
+
+-- Configuracion leds activos a nivel bajo.
                                      
  led_left<= obj_left;  
  led_right<= obj_right;  
- led_front<= obstacule_front; 
-   
- motor_left  <= enable_m_d;
- motor_right <= enable_m_r;                             
+ led_front<=  start_stop; 
+ 
+ led_m_l <= pwm_left;
+ led_m_r <= pwm_right;
+ 
+ motor_left  <= pwm_left;
+ motor_right <= pwm_right;                             
 
-led_m_l <= enable_m_d;
-led_m_r <= enable_m_r;
+
+--  Start_Stop Obstaculo ---- Stop
+--      0        0             0
+--      0        1             1
+--      1        0             1
+--      1        1             1
+stop <=  start_stop or  stop_control;
 
 
 end Behavioral;

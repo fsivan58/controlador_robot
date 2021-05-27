@@ -38,15 +38,30 @@ entity LOGIC_SWICH is
 end LOGIC_SWICH;
 
 architecture Behavioral of LOGIC_SWICH is
-signal last_state : std_logic :='0';
-signal bloquedo : std_logic :='0';
-begin
 
-process (CLK_PGA) begin
- if rising_edge(CLK_PGA) then
+
+component CLOCK is
+    generic (
+        FREQ_G : integer := 10        -- -- Operating frequency in Hz.
+    );
+    port (
+        clk     : in  std_logic;
+        reset   : in  std_logic;
+        clk_out : out std_logic
+    );
+end component;
+
+signal last_state : std_logic :='1';
+signal bloquedo : std_logic :='0';
+signal clk_out : std_logic:='0';
+begin
+m_clock_1hz : CLOCK generic map (FREQ_G => 5) port map (clk=> CLK_PGA, reset =>'0',clk_out=> clk_out );
+
+process (clk_out) begin
+ if rising_edge(clk_out) then
      if bloquedo = '1' and sw_in ='1' then
              bloquedo<='0';
-     elsif  bloquedo = '0' and sw_in ='0' then
+     elsif bloquedo = '0' and sw_in ='0' then
            bloquedo<='1';
            last_state <= not last_state;
      end if;

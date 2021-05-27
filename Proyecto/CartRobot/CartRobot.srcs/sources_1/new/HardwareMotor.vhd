@@ -68,18 +68,18 @@ end component;
 
 component LOGIC_SWICH is
     Port (CLK_PGA : in STD_LOGIC;
-     sw_in : in STD_LOGIC;
+           sw_in : in STD_LOGIC;
            sw_out : out STD_LOGIC);
 end component;
 
-signal enable_m_d,  enable_m_r: STD_LOGIC;
+signal enable_m_l,  enable_m_r: STD_LOGIC;
 
 begin
 m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      obj_left=>'0', 
                                      obj_right=>'0', 
                                      stop=> '0',
-                                     motor_left=>motor_left,
+                                     motor_left=>enable_m_l,
                                      motor_right=>enable_m_r );
                                      
  m_switch: LOGIC_SWICH port map (CLK_PGA=>CLK_FPGA, sw_in=>sw_in, sw_out=>led_m_l);                               
@@ -87,6 +87,6 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                        
 
  motor_right <= enable_m_r; 
- 
+ motor_left<=enable_m_l;
 led_m_r <= enable_m_r;
 end Behavioral;
