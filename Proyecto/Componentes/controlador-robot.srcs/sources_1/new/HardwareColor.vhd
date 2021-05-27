@@ -95,7 +95,7 @@ signal finish_count: std_logic := '0';
 
 begin
 -- Configurar reloj al doble de la frecuencia de trabajo. 0-999 
-m_clock_color : clock generic map (FREQ_G =>5_000_000) port map (clk=> clk, reset =>'0', clk_out => clock_color);
+m_clock_color : clock generic map (FREQ_G =>6_000_000) port map (clk=> clk, reset =>'0', clk_out => clock_color);
 
 -- Seleccionar color
 m_selecColor : ColorSelector port map (color => "11", s2=> s2_int, s3=> s3_int);
