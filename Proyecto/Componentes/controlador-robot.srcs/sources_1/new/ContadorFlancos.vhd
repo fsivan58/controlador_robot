@@ -46,37 +46,53 @@ architecture Behavioral of ContadorFlancos is
  signal   count_hight   : integer   range 0 to 50_000_000 :=0;
  signal   count_low     : integer   range 0 to 50_000_000 :=0;
  SIGNAL ESTADO : integer:= 0;
+ signal end_count_interno : std_logic:='0';
 begin
 
 timeH <= count_hight;
 timeD <= count_low;
+end_count<=end_count_interno;
 
-contador_flanco: process ( flanco, clk, reset)
+process (clk, reset )
 begin
-    if(reset ='1') then
+if(reset ='1') then
         ESTADO <= 0;
         count_hight <= 0;
         count_low <= 0;
-        end_count <='0';
-    elsif clk'event then
-        if ESTADO < 2 then
-              if flanco = '1' then
-                if( ESTADO = 1) then
-                    ESTADO <= 2;
-                    end_count <='1';
-                else
-                    count_hight <= count_hight+1;
-                    end_count <='0';
-                end if;
-              else 
-                ESTADO <= 1;
-                count_low <= count_low+1;
-              end if;
-        end if;
+        end_count_interno <='0';
+elsif rising_edge(clk) then
+    if ESTADO = 0 then
+		if flanco = '0'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
+			ESTADO <= 1;
+		end if;
+	elsif ESTADO = 1 then 
+		if flanco = '1'   then  -- Se espera a que flanco se ponga a '1'.
+			ESTADO <= 2;
+		end if;
+		
+    elsif ESTADO = 2 then
+    	if flanco = '1' then -- Cuenta el número de periodos cuando flanco se encuentra en '1'.
+			count_hight <= count_hight+1;
+		else
+			ESTADO <= 3; -- Empiezo a contar el numero de flancos a nivel bajo
+		end if;
+    elsif ESTADO = 3 then
+         if flanco = '0' then -- Cuenta el número de periodos cuando flanco se encuentra en '1'.
+			count_low <= count_low+1;
+		else
+			ESTADO <= 4; -- Termino de contar
+		end if;
+    elsif ESTADO = 4 then  -- Se almacena durante un ciclo el resultado
+        end_count_interno <='1';
+        ESTADO <= 5;    
+    elsif ESTADO = 5 then 
+         ESTADO <= 0;
+        count_hight <= 0;
+        count_low <= 0;
+        end_count_interno <='0';
     end if;
-
+end if;
 end process;
-
 
 
 end Behavioral;

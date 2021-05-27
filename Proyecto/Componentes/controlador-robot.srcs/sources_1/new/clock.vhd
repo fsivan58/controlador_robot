@@ -47,20 +47,25 @@ architecture Behavioral of clock is
     signal   state     : std_logic := '1';
 begin
 
-frequency_divider: process (clk, reset)
-    begin
-        if reset = '1' then
-            state <= '0';
-            count <= 0;
-        elsif clk'event and clk = '1' then
-            if count = max_count then
-                state <= not state;
-                count <= 0;
-            else
-                count <= count + 1;
-            end if;
+process (clk, reset)
+begin
+ if rising_edge(clk) then
+     if reset = '1' then
+        state <= '0';
+        count <= 0;
+      else
+        if count = max_count then
+           state <= not state;
+           count <= 0;
+        else
+            count <= count + 1;
         end if;
-        clk_out <= state;
-    end process;
+      end if;
+ end if;
+ 
+        
+end process;
+
+ clk_out <= state;
 
 end Behavioral;

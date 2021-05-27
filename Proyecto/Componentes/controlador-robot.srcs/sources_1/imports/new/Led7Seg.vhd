@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 28.04.2021 14:16:35
+-- Create Date: 22.05.2021 15:57:21
 -- Design Name: 
--- Module Name: sem7 - Behavioral
+-- Module Name: Led7Seg - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,19 +31,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity led7semg is
-    Port ( n_input  : in bit_vector (3 downto 0);
-           pos      : in STD_LOGIC;
-           display  : out std_logic_vector (6 downto 0);
-           pos_out : out STD_LOGIC);
-end led7semg;
+entity Led7Seg is
+    Port ( n_input :  in std_logic_vector (3 downto 0);
+            display : out std_logic_vector (6 downto 0)
+           );
+end Led7Seg;
 
-architecture Behavioral of led7semg is
+architecture Behavioral of Led7Seg is
 
 begin
 
-pos_out <= pos;
-		  --GFEDCBA
 display <= "1000000" WHEN n_input ="0000" ELSE
            "1111001" WHEN n_input ="0001" ELSE
            "0100100" WHEN n_input ="0010" ELSE
@@ -53,6 +50,8 @@ display <= "1000000" WHEN n_input ="0000" ELSE
            "0000010" WHEN n_input ="0110" ELSE
            "1111000" WHEN n_input ="0111" ELSE
            "0000000" WHEN n_input ="1000" ELSE
+           "0011000" WHEN n_input ="1001" ELSE
            "0000110"; 
+
 
 end Behavioral;
