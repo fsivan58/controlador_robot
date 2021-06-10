@@ -1,23 +1,15 @@
-set_property PACKAGE_PIN N11 [get_ports CLK_FPGA]
-set_property IOSTANDARD LVCMOS33 [get_ports CLK_FPGA]
 
-set_property PACKAGE_PIN P13 [get_ports echo_front]
 set_property IOSTANDARD LVCMOS33 [get_ports echo_front]
-set_property PACKAGE_PIN T13 [get_ports echo_left]
+set_property PACKAGE_PIN P13 [get_ports echo_left]
 set_property PACKAGE_PIN T12 [get_ports echo_right]
 set_property IOSTANDARD LVCMOS33 [get_ports echo_left]
 set_property IOSTANDARD LVCMOS33 [get_ports echo_right]
-set_property PACKAGE_PIN P14 [get_ports trig_front]
 set_property IOSTANDARD LVCMOS33 [get_ports trig_front]
-set_property PACKAGE_PIN R13 [get_ports trig_left]
+set_property PACKAGE_PIN P14 [get_ports trig_left]
 set_property IOSTANDARD LVCMOS33 [get_ports trig_left]
 set_property PACKAGE_PIN R12 [get_ports trig_right]
 set_property IOSTANDARD LVCMOS33 [get_ports trig_right]
 
-set_property PACKAGE_PIN L13 [get_ports motor_left]
-set_property PACKAGE_PIN N12 [get_ports motor_right]
-set_property IOSTANDARD LVCMOS33 [get_ports motor_right]
-set_property IOSTANDARD LVCMOS33 [get_ports motor_left]
 
 
 set_property PACKAGE_PIN T9 [get_ports dig_1]
@@ -49,7 +41,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports led_left]
 set_property PACKAGE_PIN R7 [get_ports led_right]
 set_property IOSTANDARD LVCMOS33 [get_ports led_right]
 
-set_property IOSTANDARD LVCMOS33 [get_ports led_m_l]
-set_property PACKAGE_PIN T7 [get_ports led_m_l]
-set_property IOSTANDARD LVCMOS33 [get_ports led_m_r]
-set_property PACKAGE_PIN R8 [get_ports led_m_r]
+

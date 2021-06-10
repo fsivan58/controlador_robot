@@ -37,3 +37,9 @@ set_property IOSTANDARD LVCMOS33 [get_ports {out_display[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {out_display[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {out_display[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {out_display[0]}]
+
+set_property PACKAGE_PIN R6 [get_ports led_r6]
+set_property IOSTANDARD LVCMOS33 [get_ports led_r6]
+
+set_property PACKAGE_PIN T5 [get_ports led_t5]
+set_property IOSTANDARD LVCMOS33 [get_ports led_t5]

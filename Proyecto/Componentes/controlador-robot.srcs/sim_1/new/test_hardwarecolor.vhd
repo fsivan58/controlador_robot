@@ -38,13 +38,13 @@ end test_hardwarecolor;
 architecture Behavioral of test_hardwarecolor is
 
 component HardwareColor is
-  Port ( clk : in STD_LOGIC;
+  Port ( CLK_FPGA : in STD_LOGIC;
          serial_color : in STD_LOGIC;
-         de_l : out STD_LOGIC;  -- Nuestro sensor no funciona este pin
          s0 : out STD_LOGIC;
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
+         dato_listo : out STD_LOGIC;
          out_color : out integer -- 1024
        );
 end component;
@@ -52,19 +52,15 @@ end component;
 signal clk,serial_color,  de_l, s0,s1, s3, s2 :std_logic;
 signal out_color :integer;
 
+signal color_listo: std_logic;
+
+
 
 begin
-m_hardawarecolor: HardwareColor port map (clk=> clk, 
-                 serial_color => serial_color,
-                 de_l=>de_l, 
-                 s0=> s0, 
-                 s1=>s1, 
-                 s2=>s2, 
-                 s3=> s3, 
-                 out_color=> 
-                 out_color);
+m_colorh :HardwareColor port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
 
 
+-- 50MHZ
 process begin
         clk <= '0';
         wait for 10ns;
@@ -74,9 +70,11 @@ end process;
 
 process begin
     -- 80 ns = 12khz 40 alto y 40 bajo
-        serial_color <= '0';
-        wait for 40ns;
-        serial_color <= '1';
-        wait for 40ns;
+     serial_color <= '0';
+     wait for 20ns;
+     
+     serial_color <= '1';
+        wait for 20ns;
+      
 end process;
 end Behavioral;

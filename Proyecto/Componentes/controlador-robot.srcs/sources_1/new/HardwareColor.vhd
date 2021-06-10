@@ -32,13 +32,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity HardwareColor is
-  Port ( clk : in STD_LOGIC;
+  Port ( CLK_FPGA : in STD_LOGIC;
          serial_color : in STD_LOGIC;
-         de_l : out STD_LOGIC;  -- Nuestro sensor no funciona este pin
          s0 : out STD_LOGIC;
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
+         dato_listo : out STD_LOGIC; 
          out_color : out integer -- 1024
        );
 end HardwareColor;
@@ -65,11 +65,10 @@ end component;
 
 component ContadorFlancos is
     Port ( clk : in STD_LOGIC;
-           reset : in STD_LOGIC;
            flanco : in STD_LOGIC;
+           dato_listo : out STD_LOGIC;
            timeH :  out integer;
-           timeD : out integer;
-           end_count : out STD_LOGIC
+           timeD : out integer
            );
 end component;
 
@@ -91,20 +90,18 @@ signal timeD_O, timeH_O, valueR, valueG, valueB: integer;
  -- Contador de flancos 
 signal finish_count: std_logic := '0';
 
+signal data_listo_internal: std_logic := '0';
 
 
 begin
 -- Configurar reloj al doble de la frecuencia de trabajo. 0-999 
-m_clock_color : clock generic map (FREQ_G =>6_000_000) port map (clk=> clk, reset =>'0', clk_out => clock_color);
+m_clock_color : clock generic map (FREQ_G =>4_000_000) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_color);
 
 -- Seleccionar color
 m_selecColor : ColorSelector port map (color => "11", s2=> s2_int, s3=> s3_int);
 
 -- Contar lo que entra del sensor
-m_counter_de: ContadorFlancos port map (clk=> clock_color, reset=> '0', flanco=>serial_color, timeH =>timeH_O, timeD=>timeD_O, end_count =>finish_count);
-
--- Registro color
-m_registerRed : MediaRegister port map (enable=> finish_count, time_h=>timeH_O, time_d=>timeD_O, out_media => out_color);
+m_counter_de: ContadorFlancos port map (clk=> clock_color, flanco=>serial_color, dato_listo => finish_count, timeH =>timeH_O, timeD=>timeD_O);
 
 
 -- Config 12khz s0 <= '1' s1 <= '0'
@@ -114,8 +111,26 @@ s1<='0';
 
 s2 <= s2_int;
 s3 <= s3_int;
+-- Finaliza la cuenta y envia el de mayor valor
+dato_listo <= data_listo_internal;
 
-de_l <=finish_count;
+process (CLK_FPGA)
+begin 
+if rising_edge(CLK_FPGA) then
+        IF finish_count ='1' THEN
+            if timeH_O > timeD_O then
+                out_color <= timeH_O;
+            else 
+                out_color <= timeD_O;
+             end if;
+             data_listo_internal <='1';
+         else
+            data_listo_internal <='0';
+        END IF;
+end if;
+end process;
+
+
 end Behavioral;
 
 

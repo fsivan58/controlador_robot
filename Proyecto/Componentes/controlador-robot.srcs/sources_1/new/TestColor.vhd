@@ -42,20 +42,22 @@ entity TestColor is
          out_display : out std_logic_vector (6 downto 0);
         dig_1 : out std_logic;
         dig_2 : out std_logic;
-        dig_3 : out std_logic
+        dig_3 : out std_logic;
+        led_r6 : out std_logic;
+        led_t5 : out std_logic
        );
 end TestColor;
 
 architecture Behavioral of TestColor is
 
 component HardwareColor is
-  Port ( clk : in STD_LOGIC;
+  Port ( CLK_FPGA : in STD_LOGIC;
          serial_color : in STD_LOGIC;
-         de_l : out STD_LOGIC;  -- Nuestro sensor no funciona este pin
          s0 : out STD_LOGIC;
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
+         dato_listo : out STD_LOGIC;
          out_color : out integer -- 1024
        );
 end component;
@@ -83,14 +85,19 @@ Port (  clk : in STD_LOGIC;
 end component;
 
 signal out_color: integer;
-signal de_l : std_logic;
+signal de_l : std_logic := '0';
 
 signal clock_display : std_logic; 
+signal color_listo : std_logic;
 
 begin
 
-m_colorh :HardwareColor port map (clk=> clk, serial_color => serial_color, de_l=>de_l, s0=>s0, s1=> s1, s2=>s2, s3=>s3, out_color=>out_color);
+m_colorh :HardwareColor port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
+
 m_clok: clock generic map (FREQ_G=> 120) port map(clk=> clk, reset => '0', clk_out=> clock_display);
 
 m_display :Display port map (clk=>clock_display, number=>out_color, out_display=> out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3=>dig_3);
+
+led_r6 <= not color_listo;
+led_t5 <= serial_color;
 end Behavioral;
