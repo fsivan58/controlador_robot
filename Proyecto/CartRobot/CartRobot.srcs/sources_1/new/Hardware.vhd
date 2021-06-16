@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -37,7 +38,8 @@ entity Hardware is
             echo_left    : in  std_logic;
             echo_right   : in  std_logic;
             echo_front   : in  std_logic; 
-         
+            RX_INPUNT : in std_logic;
+            
             trig_left    : out std_logic;
             trig_right   : out std_logic;
             trig_front   : out std_logic;
@@ -85,7 +87,7 @@ component HardwareUltraSonido is
        obst_front   : out std_logic;
        obst_left    : out std_logic;
        obst_right   : out std_logic;
-       shock        : out std_logic;
+       crash        : out std_logic;
        distance : out integer range 0 to 999
    );
 end component;
@@ -116,8 +118,26 @@ component CLOCK is
         clk_out : out std_logic
     );
 end component;
+
+
+component UART_RX is
+  generic (
+        TOTAL_BITS : integer := 5208        -- -- calcular x bauoliod
+    );
+    Port ( 
+    CLK_FPGA : in std_logic;
+    RX_INPUNT : in std_logic;
+    READY : out std_logic;
+    RX_DATA: out std_logic_vector(7 downto 0) 
+    );
+end component;
+
+
+
+
+
 -- Ultra sonidos
-signal obstacule_front, obj_left, obj_right, shock, stop_control: std_logic :='0';
+signal obj_front, obj_left, obj_right, m_crash, stop_control: std_logic :='0';
 
 signal clock_display : STD_LOGIC;
 signal m_distance : integer range 0 to 999 :=0;
@@ -126,11 +146,16 @@ signal m_distance : integer range 0 to 999 :=0;
 signal pwm_left,  pwm_right,  stop: STD_LOGIC;
 
 -- Logic Swicth
-signal  start_stop : STD_LOGIC;
+signal  start_stop : STD_LOGIC :='1';
+
+--UART
+signal m_ready : std_logic; 
+SIGNAL  RX_DATA_I:  std_logic_vector(7 downto 0); 
+signal data_uart : integer range 0 to 50 :=0; -- Solo el 48 => 0 y 49 = 1
 
 begin
 
- m_switch: LOGIC_SWICH port map (CLK_PGA=>CLK_FPGA, sw_in=>sw_start, sw_out=>start_stop);      
+-- m_switch: LOGIC_SWICH port map (CLK_PGA=>CLK_FPGA, sw_in=>sw_start, sw_out=>start_stop);      
 
 m_clock_display : CLOCK generic map (FREQ_G =>120) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_display);
 
@@ -145,10 +170,10 @@ m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA,
                                                 trig_right=>trig_right, 
                                                 trig_front=>trig_front,
                                                 
-                                                obst_front=>obstacule_front,
+                                                obst_front=>obj_front, -- Distancia menos de 10 cm
                                                 obst_left=>obj_left,
                                                 obst_right=>obj_right,
-                                                shock  => shock,
+                                                crash  => m_crash, -- Disntancia menos de 4 cm
                                                 distance => m_distance
                                                 );
 
@@ -159,34 +184,36 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      motor_left=>pwm_left,
                                      motor_right=>pwm_right );
                                      
-process (CLK_FPGA) 
-begin
-if rising_edge(CLK_FPGA) then
-    if shock = '1' then
-         stop_control<='1'; -- Si se ha chocado distancia menor a 4 cm paro el coche
-    else 
-      if (obstacule_front = '1' ) then
-        if (obj_left  nand  obj_right) ='1' then
-             stop_control<='0';
-          else 
-             stop_control<='1';
-         end if;
-        else
-            stop_control<='0';
-      end if;
-    end if;
-end if;
+                                     
+m_uart :UART_RX generic map (TOTAL_BITS => 5208) port map (CLK_FPGA =>CLK_FPGA ,RX_INPUNT=> RX_INPUNT, READY => m_ready, RX_DATA=> RX_DATA_I );                                     
+                                     
+                                     
 
+
+
+read_uart : process (CLK_FPGA, m_ready)
+begin
+ if rising_edge(CLK_FPGA) then
+    if m_ready = '1' then
+        data_uart <=  to_integer(unsigned(RX_DATA_I));
+        if data_uart = 49 then
+            start_stop <= '0'; -- Start
+        else
+            start_stop <= '1'; -- Stop
+        end if;
+     end if;
+ end if;
 end process;
+
 
 -- Configuracion leds activos a nivel bajo.
                                      
  led_left<= obj_left;  
  led_right<= obj_right;  
- led_front<=  start_stop; 
+ led_front<=  obj_front; 
  
- led_m_l <= pwm_left;
- led_m_r <= pwm_right;
+ led_m_l <= not m_ready;
+ led_m_r <= start_stop;
  
  motor_left  <= pwm_left;
  motor_right <= pwm_right;                             
@@ -197,7 +224,7 @@ end process;
 --      0        1             1
 --      1        0             1
 --      1        1             1
-stop <=  start_stop or  stop_control;
+stop <=  start_stop or  m_crash;
 
 
 end Behavioral;

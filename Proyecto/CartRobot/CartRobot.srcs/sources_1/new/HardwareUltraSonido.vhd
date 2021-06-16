@@ -45,7 +45,7 @@ entity HardwareUltraSonido is
        obst_front   : out std_logic;
        obst_left    : out std_logic;
        obst_right   : out std_logic;
-       shock        : out std_logic;
+       crash        : out std_logic;
        distance : out integer range 0 to 999
    );
 end HardwareUltraSonido;
@@ -104,9 +104,9 @@ if rising_edge(CLK_FPGA) then
         if distancia_front < MIN_DISTANCE then -- 10cm en binario en 9 bits
             obst_front <= '1';
             if(distancia_front <= "000000011") then -- 4 cm en binario
-                shock <='1';
+                crash <='1';
             else 
-                 shock <='0';
+                 crash <='0';
             end if;
         else
            obst_front <= '0';

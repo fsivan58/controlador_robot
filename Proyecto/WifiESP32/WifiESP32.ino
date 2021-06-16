@@ -1,5 +1,4 @@
 
-
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -44,7 +43,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(800);
+  delay(600);
 
    if(WiFi.status()== WL_CONNECTED){
      Serial.print("connecting to ");
