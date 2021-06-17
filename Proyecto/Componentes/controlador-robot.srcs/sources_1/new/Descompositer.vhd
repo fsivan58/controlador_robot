@@ -33,7 +33,7 @@ use ieee.numeric_std.all;
 --use UNISIM.VComponents.all;
 
 entity Descompositer is
-    Port ( in_number : in integer;
+    Port ( in_number : in integer range 0 to 999;
            s0 : in STD_LOGIC;
            s1 : in STD_LOGIC;
            out_vector : out std_logic_vector(3 downto 0)

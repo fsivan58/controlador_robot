@@ -23,7 +23,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-
 entity Hardaware_UART is
          Port ( 
                 CLK_FPGA : in STD_LOGIC;

@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Display is
 Port (  clk : in STD_LOGIC;
-        number : in integer;
+        number : in integer range 0 to 999;
         out_display : out std_logic_vector (6 downto 0);
         dig_1 : out std_logic;
         dig_2 : out std_logic;
@@ -50,7 +50,7 @@ component CounterStatus is
 end component;
 
 component Descompositer is
-    Port ( in_number : in integer;
+    Port ( in_number : in integer range 0 to 999;
            s0 : in STD_LOGIC;
            s1 : in STD_LOGIC;
            out_vector : out std_logic_vector  (3 downto 0));

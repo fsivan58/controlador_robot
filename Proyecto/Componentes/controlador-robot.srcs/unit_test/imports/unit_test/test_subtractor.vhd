@@ -32,11 +32,11 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity subtractor_test is
+entity test_subtractor is
 --  Port ( );
-end subtractor_test;
+end test_subtractor;
 
-architecture Behavioral of subtractor_test is
+architecture Behavioral of test_subtractor is
     component subtractor
         generic (k : integer := 16);
         port (

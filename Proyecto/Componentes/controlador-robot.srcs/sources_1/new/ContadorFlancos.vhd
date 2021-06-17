@@ -36,14 +36,14 @@ entity ContadorFlancos is
     Port ( clk : in STD_LOGIC;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
-           timeH :  out integer;
-           timeD : out integer
+           timeH :  out integer  range 0 to 1_000_000;
+           timeD : out integer  range 0 to 1_000_000
            );
 end ContadorFlancos;
 
 architecture Behavioral of ContadorFlancos is
- signal   count_hight   : integer   range 0 to 50_000_000 :=0;
- signal   count_low     : integer   range 0 to 50_000_000 :=0;
+ signal   count_hight   : integer   range 0 to 1_000_000 :=0; -- Funcionamiento 12 Khz y frecuencia de muestreo de 4_000_000/2 = 2_000_000
+ signal   count_low     : integer   range 0 to 1_000_000 :=0;
  signal ESTADO : integer:= 0;
 
 begin

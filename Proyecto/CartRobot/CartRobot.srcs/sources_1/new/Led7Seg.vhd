@@ -31,13 +31,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Led7Seg is
+entity LED7SEG is
     Port ( n_input :  in std_logic_vector (3 downto 0);
             display : out std_logic_vector (6 downto 0)
            );
-end Led7Seg;
+end LED7SEG;
 
-architecture Behavioral of Led7Seg is
+architecture Behavioral of LED7SEG is
 
 begin
 

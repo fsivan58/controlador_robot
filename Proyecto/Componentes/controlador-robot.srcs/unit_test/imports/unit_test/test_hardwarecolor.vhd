@@ -37,7 +37,7 @@ end test_hardwarecolor;
 
 architecture Behavioral of test_hardwarecolor is
 
-component HardwareColor is
+component SENSORCOLOR is
   Port ( CLK_FPGA : in STD_LOGIC;
          serial_color : in STD_LOGIC;
          s0 : out STD_LOGIC;
@@ -49,7 +49,7 @@ component HardwareColor is
        );
 end component;
 
-signal clk,serial_color,  de_l, s0,s1, s3, s2 :std_logic;
+signal clk,serial_color,  s0,s1, s3, s2 :std_logic;
 signal out_color :integer;
 
 signal color_listo: std_logic;
@@ -57,7 +57,7 @@ signal color_listo: std_logic;
 
 
 begin
-m_colorh :HardwareColor port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
+m_colorh :SENSORCOLOR port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
 
 
 -- 50MHZ
@@ -69,12 +69,12 @@ process begin
 end process;
 
 process begin
-    -- 80 ns = 12khz 40 alto y 40 bajo
+    -- 6,643khz Aprox = 155 us micro segundos
      serial_color <= '0';
-     wait for 20ns;
+     wait for 75us;
      
      serial_color <= '1';
-        wait for 20ns;
+        wait for 75us;
       
 end process;
 end Behavioral;

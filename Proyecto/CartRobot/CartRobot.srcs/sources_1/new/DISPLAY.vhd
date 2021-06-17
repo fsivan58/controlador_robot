@@ -56,7 +56,7 @@ component DESCOMPOSITER is
            out_vector : out std_logic_vector  (3 downto 0));
 end component;
 
-component Led7Seg is
+component LED7SEG is
     Port ( n_input :  in std_logic_vector (3 downto 0);
             display : out std_logic_vector (6 downto 0)
            );
@@ -71,7 +71,7 @@ begin
 
 m_digit: SHOWDIGIT port map(clk => clk, s0=>s0, s1=> s1);
 m_descompositer: DESCOMPOSITER port map(in_number=>number, s0=>s0, s1=> s1, out_vector => current_number);
-m_led : Led7Seg port map (n_input => current_number, display=> out_display);
+m_led : LED7SEG port map (n_input => current_number, display=> out_display);
 
 process (s0, s1)
 begin
@@ -81,7 +81,7 @@ if(s0='0' and s1='0') then
       dig_2 <= '0';
       dig_3 <= '1';
 elsif (s0='1' and s1='0') then 
-       dig_1 <= '0';
+      dig_1 <= '0';
       dig_2 <= '1';
       dig_3 <= '0';
 elsif (s0='0' and s1='1') then 

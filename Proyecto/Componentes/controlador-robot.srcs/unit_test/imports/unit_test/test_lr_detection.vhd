@@ -31,12 +31,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity lr_detection_test is
+entity test_lr_detection is
 --  Port ( );
-end lr_detection_test;
+end test_lr_detection;
 
-architecture Behavioral of lr_detection_test is
-    component lr_detection
+architecture Behavioral of test_lr_detection is
+    component HardwareUltraSonido
         port (
             clk    : in    std_logic;
             echo_l : in    std_logic;
@@ -54,7 +54,7 @@ architecture Behavioral of lr_detection_test is
     signal echo_l, echo_r, echo_f : std_logic := '0';
 begin
 
-    lr_detection_test : lr_detection
+    lr_detection_test : HardwareUltraSonido
         port map (
             clk => clk,
             echo_l => echo_l,

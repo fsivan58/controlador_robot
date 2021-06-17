@@ -32,11 +32,11 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity comparator_test is
+entity test_comparator is
 --  Port ( );
-end comparator_test;
+end test_comparator;
 
-architecture Behavioral of comparator_test is
+architecture Behavioral of test_comparator is
     component comparator
         generic (k : integer := 16);
         port (

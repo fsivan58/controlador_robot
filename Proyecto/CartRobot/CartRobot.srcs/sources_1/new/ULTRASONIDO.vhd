@@ -64,12 +64,12 @@ PORT(
 	);
 END COMPONENT;
 
-signal ok		  				 : std_logic;                                      -- Bandera que indica fin de división.
+signal ok		  				 : std_logic;                                      -- flag que indica fin de división.
 signal ini		  				 : std_logic;                                      -- Bit que inicia el proceso de división.
 signal trigger_s 				 : std_logic := '0';                               -- Bit auxiliar para Trigger y también se utiliza como indicador para mandar la distancia.
 signal calcular 				 : std_logic := '0';                               -- Bit que indica cuándo calcular la división.
-signal dividendo 				 : std_logic_vector(31 downto 0);                  -- Operadior dividendo.
-signal divisor   				 : std_logic_vector(31 downto 0);                  -- Operador divisor.
+signal dividendo 				 : std_logic_vector(31 downto 0);                  -- num dividendo.
+signal divisor   				 : std_logic_vector(31 downto 0);                  -- num divisor.
 signal resultado 				 : std_logic_vector(31 downto 0);                  -- Resultado de la división.
 signal conta_trigger 		 : integer range 0 to escala_periodo_trigger := 0; -- Contador para la generación del Trigger.
 signal conta_eco 				 : integer := 0;                                   -- Contador para el cálculo del tiempo de Eco.

@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ultrasonidos_test is
+entity test_ultrasonidos is
 --  Port ( );
-end ultrasonidos_test;
+end test_ultrasonidos;
 
-architecture Behavioral of ultrasonidos_test is
+architecture Behavioral of test_ultrasonidos is
     component ultrasonidos
         generic (k : integer := 16);
         port (

@@ -42,7 +42,7 @@ signal RX_INPUNT : std_logic := '0';
 signal READY : std_logic := '0';
 signal RX_DATA: std_logic_vector (7 downto 0);
 
-constant c_BIT_PERIOD : time := 122 us;
+constant c_BIT_PERIOD : time := 97 us;
 component UART_RX is
   generic (
         TOTAL_BITS : integer := 5208        -- -- calcular x bauoliod
@@ -73,24 +73,29 @@ end process;
 
 process begin
         RX_INPUNT <= '1';
-        wait for 100us;
+        wait for 200us;
         
-         RX_INPUNT <= '0';
+         RX_INPUNT <= '0'; -- Start
         wait for c_BIT_PERIOD;
-        RX_INPUNT <= '1';
+        RX_INPUNT <= '1'; -- Data 0
         wait for c_BIT_PERIOD;
-          RX_INPUNT <= '0';
+          RX_INPUNT <= '0'; -- Data 1
         wait for c_BIT_PERIOD;
-          RX_INPUNT <= '0';
+          RX_INPUNT <= '0'; -- Data 2
         wait for c_BIT_PERIOD;
-          RX_INPUNT <= '0';
+          RX_INPUNT <= '0'; -- Data 3
         wait for c_BIT_PERIOD;
-          RX_INPUNT <= '1';
+          RX_INPUNT <= '1'; -- Data 4
         wait for c_BIT_PERIOD;
-        RX_INPUNT <= '0';
+        RX_INPUNT <= '1'; -- Data 5
         wait for c_BIT_PERIOD;
-        RX_INPUNT <= '0';
+        RX_INPUNT <= '0'; -- Data 6
         wait for c_BIT_PERIOD;
+        RX_INPUNT <= '0'; -- Data 7
+        wait for c_BIT_PERIOD;
+        RX_INPUNT <= '0'; -- END
+        wait for c_BIT_PERIOD;
+       
 end process;
 
 

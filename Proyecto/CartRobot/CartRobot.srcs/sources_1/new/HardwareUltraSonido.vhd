@@ -71,6 +71,7 @@ CONSTANT MIN_DISTANCE_LADOS   : STD_LOGIC_VECTOR(8 DOWNTO 0) := "000001110";
 
  signal dato_left_listo, dato_right_listo, dato_front_listo   : std_logic := '0';
  signal distancia_left,distancia_right, distancia_front : std_logic_vector(8 downto 0) := (others => '0');
+ signal reg_distance : integer range 0 to 999 := 0;
  
  
 begin
@@ -101,6 +102,7 @@ process(CLK_FPGA)
 begin
 if rising_edge(CLK_FPGA) then
     if dato_front_listo = '1' then
+        reg_distance  <= to_integer(unsigned(distancia_front)); -- Save value
         if distancia_front < MIN_DISTANCE then -- 10cm en binario en 9 bits
             obst_front <= '1';
             if(distancia_front <= "000000011") then -- 4 cm en binario
@@ -131,8 +133,7 @@ end if;
 end process;
 ------------------------
 
--- medir distancia 
-distance <= to_integer(unsigned(distancia_front));
-
+-- Guardar distancia distancia 
+distance <= reg_distance;
 
 end Behavioral;

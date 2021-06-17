@@ -44,7 +44,7 @@ signal RX_DATA_I : std_logic :='0';
 
 type STATE_RX is (S_ESPERA, S_START, S_COUNTER_DATA, S_STOP, S_CLEAR);
 
-SIGNAL M_STATE : STATE_RX  := S_ESPERA;
+signal M_STATE : STATE_RX  := S_ESPERA;
 
 signal NUM_DATA : integer range 0 to TOTAL_BITS -1 :=0;
 signal BIT_INDEX : integer range 0 to 7 := 0;

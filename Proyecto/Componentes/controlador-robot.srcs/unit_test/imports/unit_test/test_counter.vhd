@@ -32,11 +32,11 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity counter_test is
+entity test_counter is
 --  Port ( );
-end counter_test;
+end test_counter;
 
-architecture Behavioral of counter_test is
+architecture Behavioral of test_counter is
     component counter is
         generic(n : positive := 10);
         port(

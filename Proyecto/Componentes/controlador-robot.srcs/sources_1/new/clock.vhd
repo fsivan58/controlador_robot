@@ -30,7 +30,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity clock is
+entity CLOCK is
     generic (
         FREQ_G : integer := 10        -- -- Operating frequency in Hz.
     );
@@ -39,9 +39,9 @@ entity clock is
         reset   : in  std_logic;
         clk_out : out std_logic
     );
-end clock;
+end CLOCK;
 
-architecture Behavioral of clock is
+architecture Behavioral of CLOCK is
     constant max_count : integer   := (50_000_000/FREQ_G)/2 - 1;
     signal   count     : integer   range 0 to max_count;
     signal   state     : std_logic := '1';
