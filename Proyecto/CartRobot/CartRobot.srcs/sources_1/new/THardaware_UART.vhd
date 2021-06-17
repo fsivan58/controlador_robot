@@ -23,7 +23,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity Hardaware_UART is
+entity THardaware_UART is
          Port ( 
                 CLK_FPGA : in STD_LOGIC;
                 RX_INPUNT : in std_logic;
@@ -35,9 +35,9 @@ entity Hardaware_UART is
         );
 
 
-end Hardaware_UART;
+end THardaware_UART;
 
-architecture Behavioral of Hardaware_UART is
+architecture Behavioral of THardaware_UART is
 
 signal clock_display : std_logic; 
 signal m_ready : std_logic; 

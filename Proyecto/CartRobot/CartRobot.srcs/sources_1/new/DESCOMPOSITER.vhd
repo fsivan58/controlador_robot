@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 25.05.2021 01:10:36
+-- Create Date: 21.05.2021 16:57:21
 -- Design Name: 
--- Module Name: DESCOMPOSITER - Behavioral
+-- Module Name: Descompositer - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,31 +21,32 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
-
-use IEEE.NUMERIC_STD.ALL;
+--use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity DESCOMPOSITER is
-Port ( in_number : in integer;
+entity Descompositer is
+    Port ( in_number : in integer range 0 to 999;
            s0 : in STD_LOGIC;
            s1 : in STD_LOGIC;
            out_vector : out std_logic_vector(3 downto 0)
            );
-end DESCOMPOSITER;
+          
+           
+end Descompositer;
 
-architecture Behavioral of DESCOMPOSITER is
+architecture Behavioral of Descompositer is
 signal unidades : integer range 0 to 9 := 0;
 signal decenas: integer range 0 to 9 := 0;
 signal centenas : integer range 0 to 9 :=0;
 signal out_vector_inter :  std_logic_vector(3 downto 0) := (others => '0');
-
 begin
 
 process (unidades, decenas,centenas, s0, s1) begin 
@@ -67,3 +68,10 @@ end process;
 out_vector <= out_vector_inter;
 
 end Behavioral;
+
+
+
+
+
+
+

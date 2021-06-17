@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity test_hardwarecolor is
+entity test_sensorcolor is
 --  Port ( );
-end test_hardwarecolor;
+end test_sensorcolor;
 
-architecture Behavioral of test_hardwarecolor is
+architecture Behavioral of test_sensorcolor is
 
 component SENSORCOLOR is
   Port ( CLK_FPGA : in STD_LOGIC;

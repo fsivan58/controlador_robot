@@ -31,14 +31,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity test_colorselector is
+entity test_filtercolor is
 --  Port ( );
-end test_colorselector;
+end test_filtercolor;
 
-architecture testbench of test_colorselector is
+architecture testbench of test_filtercolor is
 
 
-component colorselector
+component FILTERCOLOR
   Port ( color : in bit_vector(1 downto 0);
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC
@@ -51,7 +51,7 @@ end component;
 
 begin
 
-color_comp : colorselector port map (color  => color_s, s2=>s2_o, s3 =>s3_o );
+color_filter: FILTERCOLOR port map (color  => color_s, s2=>s2_o, s3 =>s3_o );
 
  process begin
      color_s <= "00";

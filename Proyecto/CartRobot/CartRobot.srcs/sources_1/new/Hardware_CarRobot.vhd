@@ -32,37 +32,53 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Hardware is
+entity Hardware_CarRobot is
     Port ( CLK_FPGA: in std_logic;
             sw_start : in STD_LOGIC;
+            
+            RX_INPUNT : in std_logic;
+            -- Ultra sonidos
             echo_left    : in  std_logic;
             echo_right   : in  std_logic;
             echo_front   : in  std_logic; 
-            RX_INPUNT : in std_logic;
             
             trig_left    : out std_logic;
             trig_right   : out std_logic;
             trig_front   : out std_logic;
+            
+            -- Indicadores de obstaculos
+            led_front : out std_logic;
+            led_left : out std_logic;
+            led_right : out std_logic; 
        
-             motor_left : out STD_LOGIC; -- Activo motor izquierdo
-             motor_right : out STD_LOGIC; -- Activo motor derecho
+            -- PWM Motores
+             motor_left : out STD_LOGIC; 
+             motor_right : out STD_LOGIC; 
              
-              out_display : out std_logic_vector (6 downto 0);
-              dig_1 : out std_logic;
-              dig_2 : out std_logic;
-              dig_3 : out std_logic;
-              
-              led_front : out std_logic;
-              led_left : out std_logic;
-              led_right : out std_logic; 
-              
+             -- Sensor de color
+             fr_color : in STD_LOGIC;
+             s0 : out STD_LOGIC;
+             s1 : out STD_LOGIC;
+             s2 : out STD_LOGIC;
+             s3 : out STD_LOGIC;
+          
+            -- Display 7 segmentos
+             out_display : out std_logic_vector (6 downto 0);
+             dig_1 : out std_logic;
+             dig_2 : out std_logic;
+             dig_3 : out std_logic;
+             
+             -- Leds indicadores
               led_m_l : out std_logic;
               led_m_r : out std_logic
            );
-end Hardware;
+end Hardware_CarRobot;
 
-architecture Behavioral of Hardware is
+architecture Behavioral of Hardware_CarRobot is
 
+------------------------------
+-- Definicion de componentes
+------------------------------
 component HardwarePuenteH is
     Port ( CLK_FPGA: in std_logic;
            obj_left : in STD_LOGIC; -- Objeto detectado en el lado izquierdo
@@ -132,9 +148,21 @@ component UART_RX is
     );
 end component;
 
+component SENSORCOLOR is
+  Port ( CLK_FPGA : in STD_LOGIC;
+         serial_color : in STD_LOGIC;
+         s0 : out STD_LOGIC;
+         s1 : out STD_LOGIC;
+         s2 : out STD_LOGIC;
+         s3 : out STD_LOGIC;
+         dato_listo : out STD_LOGIC; 
+         out_color : out integer range 0 to 1_000_000 -- 1024
+       );
+end component;
 
-
-
+------------------------------
+-- Definicion de señales
+------------------------------
 
 -- Ultra sonidos
 signal obj_front, obj_left, obj_right, m_crash, stop_control: std_logic :='0';
@@ -152,6 +180,14 @@ signal  start_stop : STD_LOGIC :='1';
 signal m_ready : std_logic; 
 SIGNAL  RX_DATA_I:  std_logic_vector(7 downto 0); 
 signal data_uart : integer range 0 to 50 :=0; -- Solo el 48 => 0 y 49 = 1
+
+-- Sensor color
+signal dato_listo_color :  STD_LOGIC; 
+signal  reg_out_color :  integer range 0 to 1_000_000; -- 1024
+signal color_detected : STD_LOGIC := '0';
+
+constant COLOR_SCAN : integer range 0 to 1000 := 623;
+
 
 begin
 
@@ -187,10 +223,8 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      
 m_uart :UART_RX generic map (TOTAL_BITS => 5208) port map (CLK_FPGA =>CLK_FPGA ,RX_INPUNT=> RX_INPUNT, READY => m_ready, RX_DATA=> RX_DATA_I );                                     
                                      
+m_sensor_color :SENSORCOLOR port map(CLK_FPGA => CLK_FPGA,serial_color=> fr_color, s0=>s0, s1=>s1, s2=>s2, s3=>s3, dato_listo => dato_listo_color, out_color=>reg_out_color );                                    
                                      
-
-
-
 read_uart : process (CLK_FPGA, m_ready)
 begin
  if rising_edge(CLK_FPGA) then
@@ -205,12 +239,25 @@ begin
  end if;
 end process;
 
+read_color : process (CLK_FPGA, dato_listo_color)
+begin
+ if rising_edge(CLK_FPGA) then
+    if dato_listo_color = '1' then
+        if reg_out_color > COLOR_SCAN -30 and reg_out_color < COLOR_SCAN + 30 then
+            color_detected<='1';
+        else 
+            color_detected<='0';
+        end if;
+         
+     end if;
+ end if;
+end process;
 
 -- Configuracion leds activos a nivel bajo.
                                      
- led_left<= obj_left;  
- led_right<= obj_right;  
- led_front<=  obj_front; 
+ led_left  <= obj_left;  
+ led_right <= obj_right;  
+ led_front <=  obj_front; 
  
  led_m_l <= not m_ready;
  led_m_r <= start_stop;
@@ -219,12 +266,16 @@ end process;
  motor_right <= pwm_right;                             
 
 
---  Start_Stop Obstaculo ---- Stop
---      0        0             0
---      0        1             1
---      1        0             1
---      1        1             1
-stop <=  start_stop or  m_crash;
+--  Start_Stop Obstaculo  COLOR  |Stop|
+--	     0	      0	      0	       0
+--		 0	      0	      1	       1
+--	     0	      1	      0	       1
+--	     0	      1	      1	       1
+--	     1	      0	      0	       1
+--	     1	      0	      1        1
+--	     1	      1	      0	       1
+--	     1	      1	      1	       1
+stop <=  start_stop or  m_crash or color_detected;
 
 
 end Behavioral;
