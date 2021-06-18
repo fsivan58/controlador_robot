@@ -32,12 +32,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity THardware_SENSORCOLOR is
- Port ( clk : in STD_LOGIC;
-         serial_color : in STD_LOGIC;
+ Port ( CLK_FPGA : in STD_LOGIC;
+         fr_color : in STD_LOGIC;
          s0 : out STD_LOGIC;
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
+         led_c : out STD_LOGIC;
          
          out_display : out std_logic_vector (6 downto 0);
         dig_1 : out std_logic;
@@ -91,14 +92,15 @@ signal clock_display : std_logic;
 signal color_listo : std_logic;
 begin
 
-m_colorh :SENSORCOLOR port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
+m_colorh :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
 
-m_clok: clock generic map (FREQ_G=> 120) port map(clk=> clk, reset => '0', clk_out=> clock_display);
+m_clok: clock generic map (FREQ_G=> 120) port map(clk=> CLK_FPGA, reset => '0', clk_out=> clock_display);
 
 m_display :Display port map (clk=>clock_display, number=>out_color, out_display=> out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3=>dig_3);
 
 led_r6 <= not color_listo;
-led_t5 <= serial_color;
+led_t5 <= fr_color;
+led_c <= '1';
 
 end Behavioral;
 

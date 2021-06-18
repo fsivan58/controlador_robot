@@ -61,7 +61,8 @@ entity Hardware_CarRobot is
              s1 : out STD_LOGIC;
              s2 : out STD_LOGIC;
              s3 : out STD_LOGIC;
-          
+             led_c : out STD_LOGIC;
+             
             -- Display 7 segmentos
              out_display : out std_logic_vector (6 downto 0);
              dig_1 : out std_logic;
@@ -263,9 +264,10 @@ end process;
  led_m_r <= start_stop;
  
  motor_left  <= pwm_left;
- motor_right <= pwm_right;                             
-
-
+ motor_right <= pwm_right; 
+  
+ led_c <=  stop; -- Si esta a stop = 0 ce enciende el led 
+                       
 --  Start_Stop Obstaculo  COLOR  |Stop|
 --	     0	      0	      0	       0
 --		 0	      0	      1	       1
