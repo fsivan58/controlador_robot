@@ -105,7 +105,7 @@ if rising_edge(CLK_FPGA) then
         reg_distance  <= to_integer(unsigned(distancia_front)); -- Save value
         if distancia_front < MIN_DISTANCE then -- 10cm en binario en 9 bits
             obst_front <= '1';
-            if(distancia_front <= "000000011") then -- 4 cm en binario
+            if(distancia_front <= "000000110") then -- 6 cm en binario
                 crash <='1';
             else 
                  crash <='0';

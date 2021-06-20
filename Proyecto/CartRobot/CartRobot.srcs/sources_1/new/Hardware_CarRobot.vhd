@@ -184,10 +184,11 @@ signal data_uart : integer range 0 to 50 :=0; -- Solo el 48 => 0 y 49 = 1
 
 -- Sensor color
 signal dato_listo_color :  STD_LOGIC; 
-signal  reg_out_color :  integer range 0 to 1_000_000; -- 1024
+signal  m_color_detected :  integer range 0 to 1_000_000; -- 1024
 signal color_detected : STD_LOGIC := '0';
 
-constant COLOR_SCAN : integer range 0 to 1000 := 623;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 150;
+constant COLOR_SCAN_MAX : integer range 0 to 1000 := 160;
 
 
 begin
@@ -196,7 +197,7 @@ begin
 
 m_clock_display : CLOCK generic map (FREQ_G =>120) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_display);
 
-m_display : Display port map (clk => clock_display, number => m_distance, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
+m_display : Display port map (clk => clock_display, number => m_color_detected, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
 
 m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA, 
                                                 echo_left => echo_left, 
@@ -224,7 +225,7 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      
 m_uart :UART_RX generic map (TOTAL_BITS => 5208) port map (CLK_FPGA =>CLK_FPGA ,RX_INPUNT=> RX_INPUNT, READY => m_ready, RX_DATA=> RX_DATA_I );                                     
                                      
-m_sensor_color :SENSORCOLOR port map(CLK_FPGA => CLK_FPGA,serial_color=> fr_color, s0=>s0, s1=>s1, s2=>s2, s3=>s3, dato_listo => dato_listo_color, out_color=>reg_out_color );                                    
+m_sensor_color :SENSORCOLOR port map(CLK_FPGA => CLK_FPGA,serial_color=> fr_color, s0=>s0, s1=>s1, s2=>s2, s3=>s3, dato_listo => dato_listo_color, out_color=>m_color_detected );                                    
                                      
 read_uart : process (CLK_FPGA, m_ready)
 begin
@@ -244,7 +245,7 @@ read_color : process (CLK_FPGA, dato_listo_color)
 begin
  if rising_edge(CLK_FPGA) then
     if dato_listo_color = '1' then
-        if reg_out_color > COLOR_SCAN -30 and reg_out_color < COLOR_SCAN + 30 then
+        if m_color_detected > COLOR_SCAN_MIN and m_color_detected < COLOR_SCAN_MAX then
             color_detected<='1';
         else 
             color_detected<='0';
@@ -256,17 +257,18 @@ end process;
 
 -- Configuracion leds activos a nivel bajo.
                                      
- led_left  <= obj_left;  
- led_right <= obj_right;  
- led_front <=  obj_front; 
+ led_left  <= not obj_left;  
+ led_right <= not obj_right;  
+ led_front <= not obj_front; 
  
- led_m_l <= not m_ready;
+ led_m_l <= not color_detected;
  led_m_r <= start_stop;
  
  motor_left  <= pwm_left;
  motor_right <= pwm_right; 
   
- led_c <=  stop; -- Si esta a stop = 0 ce enciende el led 
+ --led_c <=  not stop; -- Si esta a stop = 0 ce enciende el led de color
+ led_c <=  '1'; -- Si esta a stop = 0 ce enciende el led de color
                        
 --  Start_Stop Obstaculo  COLOR  |Stop|
 --	     0	      0	      0	       0

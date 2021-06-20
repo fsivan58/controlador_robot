@@ -82,6 +82,7 @@ signal timeD_O, timeH_O : integer  range 0 to 1_000_000;
  -- Contador de flancos 
 signal dato_listo_fr: std_logic := '0';
 signal dato_listo_count: std_logic := '0';
+signal out_color_reg :  integer range 0 to 1_000_000 :=0; -- 1024
 
 
 begin
@@ -106,15 +107,16 @@ s3 <= s3_int;
 
 -- Flag para cuando se termina de contar los flancos
 dato_listo <= dato_listo_count;
+out_color <= out_color_reg;
 
 process (CLK_FPGA)
 begin 
     if rising_edge(CLK_FPGA) then
             if dato_listo_fr ='1' then
                 if timeH_O > timeD_O then
-                    out_color <= timeH_O;
+                    out_color_reg <= timeH_O;
                 else 
-                    out_color <= timeD_O;
+                    out_color_reg <= timeD_O;
                  end if;
                 dato_listo_count <= '1';
              else

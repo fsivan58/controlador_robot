@@ -64,7 +64,7 @@ component CLOCK is
         clk_out : out std_logic
     );
 end component;
-constant potencia : integer range 0 to 99 := 40; -- Potencia de los motores al 70% 100-70 logica negativa
+constant potencia : integer range 0 to 99 := 55; -- Potencia de los motores al 70% 100-70 logica negativa
 signal enable_left : std_logic :='1';
 signal enable_right : std_logic :='1';
 signal clock_pwm: std_logic :='0';
@@ -75,7 +75,7 @@ begin
 
 m_clock_pwm : CLOCK generic map (FREQ_G => 20_000) port map (clk => CLK_FPGA, reset=>'0', clk_out => clock_pwm);
 
-m_motor_left : PWM_PROG generic map (DUTY=> 35) port map (clk_i=>clock_pwm , activo=>enable_left, pwm=>pwm_left);
+m_motor_left : PWM_PROG generic map (DUTY=> potencia) port map (clk_i=>clock_pwm , activo=>enable_left, pwm=>pwm_left);
 m_motor_right : PWM_PROG generic map (DUTY=> potencia) port map (clk_i=>clock_pwm , activo=>enable_right, pwm=>pwm_right);
 
 process (CLK_FPGA, stop) begin 
