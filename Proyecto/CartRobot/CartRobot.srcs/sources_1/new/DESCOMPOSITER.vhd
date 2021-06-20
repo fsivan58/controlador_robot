@@ -45,38 +45,13 @@ end Descompositer;
 
 architecture Behavioral of Descompositer is
 
-COMPONENT DIVISOR_ULTRASONIDO
-PORT(
-	CLK       : IN  std_logic;
-	INI       : IN  std_logic;
-	DIVIDENDO : IN  std_logic_vector(31 downto 0);
-	DIVISOR   : IN  std_logic_vector(31 downto 0);          
-	RESULTADO : OUT std_logic_vector(31 downto 0);
-	OK        : OUT std_logic
-	);
-END COMPONENT;
-
-
-
 signal unidades : integer range 0 to 9 := 0;
 signal decenas: integer range 0 to 9 := 0;
 signal centenas : integer range 0 to 9 :=0;
 signal out_vector_inter :  std_logic_vector(3 downto 0) := (others => '0');
 
-signal init_div : std_logic :='0';
-signal div_ok : std_logic :='0';
-
-signal estado_div : integer range 0 to 6 :=0;
-
-
-signal  DIVIDENDO :   STD_LOGIC_VECTOR(31 DOWNTO 0); -- Operador dividendo.
-signal	DIVISOR   :   STD_LOGIC_VECTOR(31 DOWNTO 0); -- Operador divisor.
-signal RESULTADO :  STD_LOGIC_VECTOR(31 DOWNTO 0); -- Resultado de la división.
-
 begin
 
-
-m_divisor: DIVISOR_ULTRASONIDO PORT MAP(CLK=>CLK_FPGA, INI=> init_div, DIVIDENDO=>dividendo, DIVISOR=>divisor, RESULTADO=>resultado, OK =>div_ok);
 
 process (unidades, decenas,centenas, s0, s1) begin 
     if(s0='0' and s1='0') then
