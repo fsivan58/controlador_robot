@@ -39,6 +39,7 @@ entity SENSORCOLOR is
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
          led_c: out std_logic;
+         reset : in std_logic;
          dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
          out_color : out integer range 0 to 2_000_000 -- 1024
        );
@@ -66,6 +67,7 @@ end component;
 
 component ContadorFlancos is
     Port ( clk : in STD_LOGIC;
+            reset :in std_logic;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
            timeH :  out integer  range 0 to 2_000_000;
@@ -94,7 +96,7 @@ m_clock_color : CLOCK generic map (FREQ_G =>4_000_000) port map (clk=> CLK_FPGA,
 m_selecColor : FILTERCOLOR port map (color => "11", s2=> s2, s3=> s3);
 
 -- Contar lo que entra del sensor
-m_counter_de: ContadorFlancos port map (clk=> clock_muestreo, flanco=>serial_color, dato_listo => dato_listo_fr, timeH =>timeH_O, timeD=>timeD_O);
+m_counter_de: ContadorFlancos port map (clk=> clock_muestreo,reset => reset, flanco=>serial_color, dato_listo => dato_listo_fr, timeH =>timeH_O, timeD=>timeD_O);
 
 
 -- Config 12khz s0 <= '1' s1 <= '0'

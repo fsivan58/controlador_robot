@@ -157,6 +157,7 @@ component SENSORCOLOR is
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
          led_c: out std_logic;
+         reset : in std_logic;
          dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
          out_color : out integer range 0 to 2_000_000 -- 1024
        );
@@ -190,8 +191,10 @@ signal color_detected : STD_LOGIC := '0';
 signal number_display: integer range 0 to 999;
 
 
-constant COLOR_SCAN_MIN : integer range 0 to 1000 := 485;
-constant COLOR_SCAN_MAX : integer range 0 to 1000 := 510;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 130;
+constant COLOR_SCAN_MAX : integer range 0 to 1000 := 150;
+
+signal reset_count : std_logic := '0';
 
 
 begin
@@ -228,7 +231,7 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      
 m_uart :UART_RX generic map (TOTAL_BITS => 5208) port map (CLK_FPGA =>CLK_FPGA ,RX_INPUNT=> RX_INPUNT, READY => m_ready, RX_DATA=> RX_DATA_I );                                     
                                      
-m_sensor_color :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, led_c => led_c, dato_listo => dato_listo_color, out_color=>m_color_detected);
+m_sensor_color :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, led_c => led_c, reset => reset_count, dato_listo => dato_listo_color, out_color=>m_color_detected);
                      
 read_uart : process (CLK_FPGA)
 begin
@@ -249,13 +252,16 @@ begin
  if rising_edge(CLK_FPGA)then
     if sw_start = '0' then
        number_display <= 888;
+        led_m_l<='0';
      else
       if dato_listo_color = '1' then
       number_display <= m_color_detected;
         if m_color_detected > COLOR_SCAN_MIN and m_color_detected < COLOR_SCAN_MAX then
-            color_detected<='1';
+         color_detected <='1';
+            led_m_l<='0';
         else 
-            color_detected<='0';
+         color_detected <='0';
+            led_m_l<='1';
         end if;
          
      end if;
@@ -271,14 +277,10 @@ end process;
  led_right <= not obj_right;  
  led_front <= not obj_front; 
  
- led_m_l <= not color_detected;
  led_m_r <= start_stop;
  
  motor_left  <= pwm_left;
  motor_right <= pwm_right; 
-  
- --led_c <=  not stop; -- Si esta a stop = 0 ce enciende el led de color
- led_c <=  '1'; -- Si esta a stop = 0 ce enciende el led de color
                        
 --  Start_Stop Obstaculo  COLOR  |Stop|
 --	     0	      0	      0	       0
@@ -291,5 +293,6 @@ end process;
 --	     1	      1	      1	       1
 stop <=  start_stop or  m_crash or color_detected;
 
+reset_count <= not sw_start;
 
 end Behavioral;

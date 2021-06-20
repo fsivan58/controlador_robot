@@ -34,6 +34,7 @@ use IEEE.numeric_std.all;
 
 entity ContadorFlancos is
     Port ( clk : in STD_LOGIC;
+            reset :in std_logic;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
            timeH :  out integer  range 0 to 2_000_000;
@@ -53,10 +54,14 @@ signal M_READY :std_logic :='0';
 
 begin
 
-process (clk)
+process (clk,reset)
 begin
-if rising_edge(clk) then
-
+if reset = '1' then
+  M_STATE <= S_STOP;
+  M_READY <='0';
+  count_hight <= 0;
+  count_low <= 0;
+elsif rising_edge(clk) then
     case M_STATE is
         when S_ESPERA =>
            M_READY <='0';
