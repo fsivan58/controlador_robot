@@ -187,8 +187,8 @@ signal dato_listo_color :  STD_LOGIC;
 signal  m_color_detected :  integer range 0 to 1_000_000; -- 1024
 signal color_detected : STD_LOGIC := '0';
 
-constant COLOR_SCAN_MIN : integer range 0 to 1000 := 150;
-constant COLOR_SCAN_MAX : integer range 0 to 1000 := 160;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 410;
+constant COLOR_SCAN_MAX : integer range 0 to 1000 := 430;
 
 
 begin
@@ -241,7 +241,7 @@ begin
  end if;
 end process;
 
-read_color : process (CLK_FPGA, dato_listo_color)
+read_color : process (CLK_FPGA)
 begin
  if rising_edge(CLK_FPGA) then
     if dato_listo_color = '1' then

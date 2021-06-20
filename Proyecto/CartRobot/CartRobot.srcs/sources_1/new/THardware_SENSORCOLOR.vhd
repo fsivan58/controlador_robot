@@ -44,8 +44,8 @@ entity THardware_SENSORCOLOR is
         dig_1 : out std_logic;
         dig_2 : out std_logic;
         dig_3 : out std_logic;
-        led_r6 : out std_logic;
-        led_t5 : out std_logic
+        led_m_l : out std_logic;
+        led_m_r : out std_logic
        );
 end THardware_SENSORCOLOR;
 
@@ -70,7 +70,7 @@ component SENSORCOLOR is
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
          dato_listo : out STD_LOGIC;
-         out_color : out integer -- 1024
+         out_color : out integer  range 0 to 2_000_000 -- 1024
        );
 end component;
 
@@ -85,22 +85,39 @@ Port (  clk : in STD_LOGIC;
 end component;
 
 
-signal out_color: integer;
+signal out_color_reg: integer range 0 to 2_000_000;
+signal out_color_disp: integer;
 signal de_l : std_logic := '0';
 
 signal clock_display : std_logic; 
 signal color_listo : std_logic;
 begin
 
-m_colorh :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
+m_colorh :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color_reg);
 
 m_clok: clock generic map (FREQ_G=> 120) port map(clk=> CLK_FPGA, reset => '0', clk_out=> clock_display);
 
-m_display :Display port map (clk=>clock_display, number=>out_color, out_display=> out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3=>dig_3);
+m_display :Display port map (clk=>clock_display, number=>out_color_disp, out_display=> out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3=>dig_3);
 
-led_r6 <= not color_listo;
-led_t5 <= fr_color;
+led_m_l <= not color_listo;
+--led_m_r <= fr_color;
 led_c <= '1';
+
+read_color : process (CLK_FPGA)
+begin
+    if rising_edge(CLK_FPGA)then
+    if out_color_reg > 999 then
+        led_m_r <='0';
+    else
+        led_m_r <='1';
+    end if;
+    
+    if(color_listo = '1') then    
+        out_color_disp <= out_color_reg;
+    end if;
+    
+    end if;
+end process;
 
 end Behavioral;
 

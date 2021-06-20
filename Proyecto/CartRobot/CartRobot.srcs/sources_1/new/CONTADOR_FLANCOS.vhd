@@ -36,15 +36,15 @@ entity ContadorFlancos is
     Port ( clk : in STD_LOGIC;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
-           timeH :  out integer  range 0 to 1_000_000;
-           timeD : out integer  range 0 to 1_000_000
+           timeH :  out integer  range 0 to 2_000_000;
+           timeD : out integer  range 0 to 2_000_000
            );
 end ContadorFlancos;
 
 architecture Behavioral of ContadorFlancos is
- signal   count_hight   : integer   range 0 to 1_000_000 :=0; -- Funcionamiento 12 Khz y frecuencia de muestreo de 4_000_000/2 = 2_000_000
- signal   count_low     : integer   range 0 to 1_000_000 :=0;
- signal ESTADO : integer:= 0;
+ signal   count_hight   : integer   range 0 to 2_000_000 :=0; -- Funcionamiento 12 Khz y frecuencia de muestreo de 4_000_000/2 = 2_000_000
+ signal   count_low     : integer   range 0 to 2_000_000 :=0;
+ signal ESTADO : integer  range 0 to 5 := 0;
 
 begin
 
@@ -52,7 +52,6 @@ begin
 process (clk)
 begin
 if rising_edge(clk) then
-
     if ESTADO = 0 then
         if flanco = '0'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
                 ESTADO <= 1;
@@ -75,16 +74,16 @@ if rising_edge(clk) then
       else
                 ESTADO <= 4; -- Termino de contar
       end if;
-    elsif ESTADO = 4 then -- Se almacena durante un ciclo el resultado
-      dato_listo <='1';
+    elsif ESTADO = 4 then -- Se almacena durante un ciclo el resultado  
       timeH <= count_hight;
       timeD <= count_low;
+      dato_listo <='1';
       ESTADO <= 5;
     elsif ESTADO = 5 then
-            ESTADO <= 0;
-            count_hight <= 0;
-            count_low <= 0;
-            dato_listo <='0';
+       count_hight <= 0;
+       count_low <= 0;
+       dato_listo <='0';
+       ESTADO <= 0;
     end if;
 
 end if;

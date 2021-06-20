@@ -38,8 +38,8 @@ entity SENSORCOLOR is
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
-         dato_listo : out STD_LOGIC; 
-         out_color : out integer range 0 to 1_000_000 -- 1024
+         dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
+         out_color : out integer range 0 to 2_000_000 -- 1024
        );
 end SENSORCOLOR;
 
@@ -67,8 +67,8 @@ component ContadorFlancos is
     Port ( clk : in STD_LOGIC;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
-           timeH :  out integer  range 0 to 1_000_000;
-           timeD : out integer  range 0 to 1_000_000
+           timeH :  out integer  range 0 to 2_000_000;
+           timeD : out integer  range 0 to 2_000_000
            );
 end component;
 
@@ -77,12 +77,11 @@ signal clock_muestreo: STD_LOGIC :='0'; -- Reloj para muestreo
 
 signal s2_int, s3_int : STD_LOGIC :='0'; -- Filtro color
 
-signal timeD_O, timeH_O : integer  range 0 to 1_000_000;
+signal timeD_O, timeH_O : integer  range 0 to 2_000_000;
  
  -- Contador de flancos 
 signal dato_listo_fr: std_logic := '0';
 signal dato_listo_count: std_logic := '0';
-signal out_color_reg :  integer range 0 to 1_000_000 :=0; -- 1024
 
 
 begin
@@ -91,7 +90,7 @@ begin
 m_clock_color : CLOCK generic map (FREQ_G =>4_000_000) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_muestreo);
 
 -- Seleccionar color
-m_selecColor : FILTERCOLOR port map (color => "11", s2=> s2_int, s3=> s3_int);
+m_selecColor : FILTERCOLOR port map (color => "11", s2=> s2, s3=> s3);
 
 -- Contar lo que entra del sensor
 m_counter_de: ContadorFlancos port map (clk=> clock_muestreo, flanco=>serial_color, dato_listo => dato_listo_fr, timeH =>timeH_O, timeD=>timeD_O);
@@ -101,31 +100,22 @@ m_counter_de: ContadorFlancos port map (clk=> clock_muestreo, flanco=>serial_col
 s0<='1';
 s1<='0';
 
--- Color filtro
-s2 <= s2_int;
-s3 <= s3_int;
 
--- Flag para cuando se termina de contar los flancos
-dato_listo <= dato_listo_count;
-out_color <= out_color_reg;
-
-process (CLK_FPGA)
+process(CLK_FPGA)
 begin 
     if rising_edge(CLK_FPGA) then
             if dato_listo_fr ='1' then
                 if timeH_O > timeD_O then
-                    out_color_reg <= timeH_O;
+                    out_color <= timeH_O;
                 else 
-                    out_color_reg <= timeD_O;
+                    out_color <= timeD_O;
                  end if;
-                dato_listo_count <= '1';
+                dato_listo <= '1';
              else
-                dato_listo_count <= '0';
+                dato_listo <= '0';
             end if;
     end if;
 end process;
-
-
 
 end Behavioral;
 
