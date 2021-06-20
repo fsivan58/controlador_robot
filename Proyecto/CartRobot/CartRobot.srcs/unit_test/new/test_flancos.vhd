@@ -39,21 +39,20 @@ architecture Behavioral of test_flancos is
 
 component ContadorFlancos is
     Port ( clk : in STD_LOGIC;
-           reset : in STD_LOGIC;
            flanco : in STD_LOGIC;
-           timeH :  out integer;
-           timeD : out integer;
-           end_count : out STD_LOGIC
+           dato_listo : out STD_LOGIC;
+           timeH :  out integer  range 0 to 2_000_000;
+           timeD : out integer  range 0 to 2_000_000
            );
 end component;
 
-signal clk, flanco,end_count : std_logic:='0';
+signal clk, flanco,dato_listo : std_logic:='0';
 signal timeH, timeD: integer;
 
 begin
 
 
-m_contador : ContadorFlancos port map (clk=>clk,reset=>'0', flanco =>flanco, timeH=>timeH, timeD => timeD, end_count => end_count);
+m_contador : ContadorFlancos port map (clk=>clk, flanco =>flanco,dato_listo=> dato_listo, timeH=>timeH, timeD => timeD);
 
 process begin
 clk<='0';

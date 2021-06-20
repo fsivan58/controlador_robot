@@ -45,50 +45,60 @@ architecture Behavioral of ContadorFlancos is
  signal   count_hight   : integer   range 0 to 2_000_000 :=0; -- Funcionamiento 12 Khz y frecuencia de muestreo de 4_000_000/2 = 2_000_000
  signal   count_low     : integer   range 0 to 2_000_000 :=0;
  signal ESTADO : integer  range 0 to 5 := 0;
+ 
+ type STATE_FR is (S_ESPERA, S_START, S_COUNTER_H,S_COUNTER_L, S_STOP, S_CLEAR);
+
+signal M_STATE : STATE_FR  := S_ESPERA;
+signal M_READY :std_logic :='0';
 
 begin
-
 
 process (clk)
 begin
 if rising_edge(clk) then
-    if ESTADO = 0 then
-        if flanco = '0'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
-                ESTADO <= 1;
-            end if;
-    elsif ESTADO = 1 then 
-      if flanco = '1'   then  -- Se espera a que flanco se ponga a '1'.
-                ESTADO <= 2;
+
+    case M_STATE is
+        when S_ESPERA =>
+           M_READY <='0';
+           count_hight <= 0;
+           count_low <= 0;
+            if flanco = '0'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
+                M_STATE <= S_START;
+            end if;  
+         when S_START =>
+            if flanco = '1'   then  -- Se espera a que flanco se ponga a '1'.
+                M_STATE <= S_COUNTER_H;
                 count_hight <= count_hight+1;
-      end if; 
-    elsif ESTADO = 2 then -- Cuenta el número de periodos cuando flanco se encuentra en '1'.
-      if flanco = '1' then 
+            end if; 
+         when S_COUNTER_H =>
+           if flanco = '1' then 
                 count_hight <= count_hight+1;
             else
-                ESTADO <= 3; -- Empiezo a contar el numero de flancos a nivel bajo
+                M_STATE <= S_COUNTER_L; -- Empiezo a contar el numero de flancos a nivel bajo
                  count_low <= count_low+1;
             end if;
-    elsif ESTADO = 3 then -- Cuenta el número de periodos cuando flanco se encuentra en '1'.
-     if flanco = '0' then 
-            count_low <= count_low+1;
-      else
-                ESTADO <= 4; -- Termino de contar
-      end if;
-    elsif ESTADO = 4 then -- Se almacena durante un ciclo el resultado  
-      timeH <= count_hight;
-      timeD <= count_low;
-      dato_listo <='1';
-      ESTADO <= 5;
-    elsif ESTADO = 5 then
-       count_hight <= 0;
-       count_low <= 0;
-       dato_listo <='0';
-       ESTADO <= 0;
-    end if;
+         when S_COUNTER_L =>
+              if flanco = '0' then 
+                count_low <= count_low+1;
+              else
+                 M_STATE <= S_STOP; -- Termino de contar
+              end if;
+         when S_STOP =>
+            timeH <= count_hight;
+            timeD <= count_low;
+            M_READY <='1';
+            M_STATE <= S_CLEAR; -- Termino de contar
+         when S_CLEAR =>    
+            M_STATE <= S_ESPERA;
+         when others =>
+             M_STATE <= S_ESPERA;
+    end case;
 
 end if;
 
 end process;
+
+dato_listo <= M_READY;
 
 
 end Behavioral;

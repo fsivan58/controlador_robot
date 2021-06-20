@@ -156,8 +156,9 @@ component SENSORCOLOR is
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
-         dato_listo : out STD_LOGIC; 
-         out_color : out integer range 0 to 1_000_000 -- 1024
+         led_c: out std_logic;
+         dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
+         out_color : out integer range 0 to 2_000_000 -- 1024
        );
 end component;
 
@@ -186,6 +187,8 @@ signal data_uart : integer range 0 to 50 :=0; -- Solo el 48 => 0 y 49 = 1
 signal dato_listo_color :  STD_LOGIC; 
 signal  m_color_detected :  integer range 0 to 1_000_000; -- 1024
 signal color_detected : STD_LOGIC := '0';
+signal number_display: integer range 0 to 999;
+
 
 constant COLOR_SCAN_MIN : integer range 0 to 1000 := 485;
 constant COLOR_SCAN_MAX : integer range 0 to 1000 := 510;
@@ -197,7 +200,7 @@ begin
 
 m_clock_display : CLOCK generic map (FREQ_G =>120) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_display);
 
-m_display : Display port map (clk => clock_display, number => m_color_detected, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
+m_display : Display port map (clk => clock_display, number => number_display, out_display => out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3 => dig_3);
 
 m_ultrasonidos : HardwareUltraSonido port map(CLK_FPGA => CLK_FPGA, 
                                                 echo_left => echo_left, 
@@ -225,9 +228,9 @@ m_punte_h : HardwarePuenteH port map (CLK_FPGA=> CLK_FPGA,
                                      
 m_uart :UART_RX generic map (TOTAL_BITS => 5208) port map (CLK_FPGA =>CLK_FPGA ,RX_INPUNT=> RX_INPUNT, READY => m_ready, RX_DATA=> RX_DATA_I );                                     
                                      
-m_sensor_color :SENSORCOLOR port map(CLK_FPGA => CLK_FPGA,serial_color=> fr_color, s0=>s0, s1=>s1, s2=>s2, s3=>s3, dato_listo => dato_listo_color, out_color=>m_color_detected );                                    
-                                     
-read_uart : process (CLK_FPGA, m_ready)
+m_sensor_color :SENSORCOLOR port map (CLK_FPGA=> CLK_FPGA, serial_color => fr_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, led_c => led_c, dato_listo => dato_listo_color, out_color=>m_color_detected);
+                     
+read_uart : process (CLK_FPGA)
 begin
  if rising_edge(CLK_FPGA) then
     if m_ready = '1' then
@@ -243,8 +246,12 @@ end process;
 
 read_color : process (CLK_FPGA)
 begin
- if rising_edge(CLK_FPGA) then
-    if dato_listo_color = '1' then
+ if rising_edge(CLK_FPGA)then
+    if sw_start = '0' then
+       number_display <= 888;
+     else
+      if dato_listo_color = '1' then
+      number_display <= m_color_detected;
         if m_color_detected > COLOR_SCAN_MIN and m_color_detected < COLOR_SCAN_MAX then
             color_detected<='1';
         else 
@@ -252,8 +259,11 @@ begin
         end if;
          
      end if;
- end if;
+   end if;
+     
+end if;
 end process;
+
 
 -- Configuracion leds activos a nivel bajo.
                                      

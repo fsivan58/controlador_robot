@@ -44,8 +44,9 @@ component SENSORCOLOR is
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
-         dato_listo : out STD_LOGIC;
-         out_color : out integer -- 1024
+         led_c: out std_logic;
+         dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
+         out_color : out integer range 0 to 2_000_000 -- 1024
        );
 end component;
 
@@ -53,11 +54,12 @@ signal clk,serial_color,  s0,s1, s3, s2 :std_logic;
 signal out_color :integer;
 
 signal color_listo: std_logic;
+signal led_c: std_logic;
 
 
 
 begin
-m_colorh :SENSORCOLOR port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3, dato_listo => color_listo, out_color=>out_color);
+m_colorh :SENSORCOLOR port map (CLK_FPGA=> clk, serial_color => serial_color, s0=>s0, s1=> s1, s2=>s2, s3=>s3,led_c=> led_c, dato_listo => color_listo, out_color=>out_color);
 
 
 -- 50MHZ

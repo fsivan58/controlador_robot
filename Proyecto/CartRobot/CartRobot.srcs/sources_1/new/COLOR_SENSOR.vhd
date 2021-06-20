@@ -38,6 +38,7 @@ entity SENSORCOLOR is
          s1 : out STD_LOGIC;
          s2 : out STD_LOGIC;
          s3 : out STD_LOGIC;
+         led_c: out std_logic;
          dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
          out_color : out integer range 0 to 2_000_000 -- 1024
        );
@@ -103,18 +104,21 @@ s1<='0';
 
 process(CLK_FPGA)
 begin 
-    if rising_edge(CLK_FPGA) then
-            if dato_listo_fr ='1' then
-                if timeH_O > timeD_O then
-                    out_color <= timeH_O;
-                else 
-                    out_color <= timeD_O;
-                 end if;
-                dato_listo <= '1';
-             else
-                dato_listo <= '0';
-            end if;
-    end if;
+   if rising_edge(CLK_FPGA) then
+       if dato_listo_fr ='1' then
+           if timeH_O > timeD_O then
+                out_color <= timeH_O;
+            else 
+               out_color <= timeD_O;
+           end if;
+                
+          led_c <='0'; 
+          dato_listo <= '1';
+       else
+          led_c <='1'; 
+          dato_listo <= '0';
+      end if;
+   end if;
 end process;
 
 end Behavioral;
