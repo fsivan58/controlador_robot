@@ -187,8 +187,8 @@ signal dato_listo_color :  STD_LOGIC;
 signal  m_color_detected :  integer range 0 to 1_000_000; -- 1024
 signal color_detected : STD_LOGIC := '0';
 
-constant COLOR_SCAN_MIN : integer range 0 to 1000 := 410;
-constant COLOR_SCAN_MAX : integer range 0 to 1000 := 430;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 485;
+constant COLOR_SCAN_MAX : integer range 0 to 1000 := 510;
 
 
 begin
