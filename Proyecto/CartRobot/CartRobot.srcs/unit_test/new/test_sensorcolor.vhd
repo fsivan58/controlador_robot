@@ -72,7 +72,7 @@ process begin
 end process;
 
 process begin
-    -- 6,643khz Aprox = 155 us micro segundos
+    -- 6,643khz Aprox = 155 us micro segundos 313 pulsos
      serial_color <= '0';
      wait for 75us;
      

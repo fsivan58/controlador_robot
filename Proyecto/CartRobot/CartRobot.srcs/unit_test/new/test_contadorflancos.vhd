@@ -31,14 +31,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity test_flancos is
+entity test_contadorflancos is
 --  Port ( );
-end test_flancos;
+end test_contadorflancos;
 
-architecture Behavioral of test_flancos is
+architecture Behavioral of test_contadorflancos is
 
 component ContadorFlancos is
     Port ( clk : in STD_LOGIC;
+            reset :in std_logic;
            flanco : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
            timeH :  out integer  range 0 to 2_000_000;
@@ -52,7 +53,7 @@ signal timeH, timeD: integer;
 begin
 
 
-m_contador : ContadorFlancos port map (clk=>clk, flanco =>flanco,dato_listo=> dato_listo, timeH=>timeH, timeD => timeD);
+m_contador : ContadorFlancos port map (clk=>clk,reset=>'0', flanco =>flanco,dato_listo=> dato_listo, timeH=>timeH, timeD => timeD);
 
 process begin
 clk<='0';
