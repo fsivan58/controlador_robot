@@ -41,22 +41,11 @@ entity SENSORCOLOR is
          led_c: out std_logic;
          reset : in std_logic;
          dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
-         out_color : out integer range 0 to 2_000_000 -- 1024
+         out_color : out integer range 0 to 1_000_000 -- 1024
        );
 end SENSORCOLOR;
 
 architecture Behavioral of SENSORCOLOR is
-
-component CLOCK is
-    generic (
-        FREQ_G : integer := 10        -- -- Operating frequency in Hz.
-    );
-    port (
-        clk     : in  std_logic;
-        reset   : in  std_logic;
-        clk_out : out std_logic
-    );
-end component;
 
 component FILTERCOLOR is
   Port ( color : in bit_vector(1 downto 0);
@@ -65,22 +54,18 @@ component FILTERCOLOR is
  );
 end component;
 
-component ContadorFlancos is
-    Port ( clk : in STD_LOGIC;
-            reset :in std_logic;
-           flanco : in STD_LOGIC;
+component PERIODO is
+    Port ( CLK_FPGA : in STD_LOGIC;
+           reset :in std_logic;
+           channel : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
-           timeH :  out integer  range 0 to 2_000_000;
-           timeD : out integer  range 0 to 2_000_000
+           total_time :  out integer  range 0 to 2_000_000
            );
 end component;
 
--- Relojes para muestreo
-signal clock_muestreo: STD_LOGIC :='0'; -- Reloj para muestreo
-
 signal s2_int, s3_int : STD_LOGIC :='0'; -- Filtro color
 
-signal timeD_O, timeH_O : integer  range 0 to 2_000_000;
+signal total_time: integer  range 0 to 2_000_000;
  
  -- Contador de flancos 
 signal dato_listo_fr: std_logic := '0';
@@ -89,16 +74,12 @@ signal dato_listo_count: std_logic := '0';
 
 begin
 
--- Configurar reloj al doble de la frecuencia de trabajo. 0-999 
-m_clock_color : CLOCK generic map (FREQ_G =>4_000_000) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_muestreo);
 
 -- Seleccionar color
 m_selecColor : FILTERCOLOR port map (color => "11", s2=> s2, s3=> s3);
 
 -- Contar lo que entra del sensor
-m_counter_de: ContadorFlancos port map (clk=> clock_muestreo,reset => reset, flanco=>serial_color, dato_listo => dato_listo_fr, timeH =>timeH_O, timeD=>timeD_O);
-
-
+m_periodo: PERIODO port map(CLK_FPGA=> CLK_FPGA,reset=>reset, channel=>serial_color, dato_listo=>dato_listo_fr, total_time=>total_time);
 -- Config 12khz s0 <= '1' s1 <= '0'
 s0<='1';
 s1<='0';
@@ -108,16 +89,11 @@ process(CLK_FPGA)
 begin 
    if rising_edge(CLK_FPGA) then
        if dato_listo_fr ='1' then
-           if timeH_O > timeD_O then
-                out_color <= timeH_O;
-            else 
-               out_color <= timeD_O;
-           end if;
-                
-          led_c <='0'; 
-          dato_listo <= '1';
+           out_color <= total_time;
+           led_c <='0'; 
+           dato_listo <= '1';
        else
-          led_c <='1'; 
+           led_c <='1'; 
           dato_listo <= '0';
       end if;
    end if;

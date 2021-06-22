@@ -45,6 +45,11 @@ end ContadorFlancos;
 architecture Behavioral of ContadorFlancos is
  signal   count_hight   : integer   range 0 to 2_000_000 :=0; -- Funcionamiento 12 Khz y frecuencia de muestreo de 4_000_000/2 = 2_000_000
  signal   count_low     : integer   range 0 to 2_000_000 :=0;
+ 
+ signal   count_low_reg     : integer   range 0 to 2_000_000 :=0;
+ signal   count_hight_reg     : integer   range 0 to 2_000_000 :=0;
+ 
+ 
  signal ESTADO : integer  range 0 to 5 := 0;
  
  type STATE_FR is (S_ESPERA, S_START, S_COUNTER_H,S_COUNTER_L, S_STOP, S_CLEAR);
@@ -89,8 +94,8 @@ elsif rising_edge(clk) then
                  M_STATE <= S_STOP; -- Termino de contar
               end if;
          when S_STOP =>
-            timeH <= count_hight;
-            timeD <= count_low;
+            count_hight_reg <= count_hight;
+            count_low_reg <= count_low;
             M_READY <='1';
             M_STATE <= S_CLEAR; -- Termino de contar
          when S_CLEAR =>    
@@ -104,7 +109,8 @@ end if;
 end process;
 
 dato_listo <= M_READY;
-
+timeH <= count_hight_reg;
+timeD <= count_low_reg;
 
 end Behavioral;
 

@@ -2,6 +2,8 @@
 set_property PACKAGE_PIN N11 [get_ports CLK_FPGA]
 set_property IOSTANDARD LVCMOS33 [get_ports CLK_FPGA]
 
+set_property CLOCK_DEDICATED_ROUTE TRUE [get_nets CLK_FPGA]
+
 # Display
 set_property PACKAGE_PIN T9 [get_ports dig_1]
 set_property PACKAGE_PIN P10 [get_ports dig_2]

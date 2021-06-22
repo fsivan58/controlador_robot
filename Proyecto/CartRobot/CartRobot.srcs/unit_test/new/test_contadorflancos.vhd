@@ -67,6 +67,16 @@ flanco<='0';
 wait for 100 ns;
 flanco<='1';
 wait for 100 ns;
+flanco<='0';
+wait for 100 ns;
+flanco<='1';
+wait for 100 ns;
+
+flanco<='0';
+wait for 10 us;
+flanco<='1';
+wait for 10 us;
+
 end process;
 
 end Behavioral;

@@ -33,7 +33,7 @@ use IEEE.numeric_std.all;
 --use UNISIM.VComponents.all;
 
 entity PERIODO is
-    Port ( CLFK_FPGA : in STD_LOGIC;
+    Port ( CLK_FPGA : in STD_LOGIC;
            reset :in std_logic;
            channel : in STD_LOGIC;
            dato_listo : out STD_LOGIC;
@@ -41,37 +41,35 @@ entity PERIODO is
            );
 end PERIODO;
 
-architecture Behavioral of ContadorFlancos is
+architecture Behavioral of PERIODO is
 
+ type STATE_FR is (S_ESPERA,S_COUNTER_H,S_STOP, S_CLEAR);
+
+signal M_STATE : STATE_FR  := S_ESPERA;
+
+ 
 
 signal channelDiv :std_logic :='0';
-signal reset_prescaler : std_logic := '0';
-
 signal clock_4Mhz : std_logic := '0';
-signal counter_240ns : integer range 0 to 12 :=0;
+
 signal counter: integer:=0;
 signal total_count : integer:=0;
-signal start_count : std_logic :='0';
 
+
+component CLOCK is
+    generic (
+        FREQ_G : integer := 10        -- -- Operating frequency in Hz.
+    );
+    port (
+        clk     : in  std_logic;
+        reset   : in  std_logic;
+        clk_out : out std_logic
+    );
+end component;
 
 
 begin
-
-frecuencia_muestreo: process (CLFK_FPGA, reset)
-begin 
-    if (reset = '1') then
-        counter_240ns <= 0;
-    elsif rising_edge(channel) then
-        if(counter_240ns = 12) then
-            counter_240ns <= 0;
-            clock_4Mhz <= not clock_4Mhz;
-        else
-            counter_240ns <= counter_240ns + 1;
-        end if;
-    end if;
-
-end process;
-
+m_clock_muestreo : CLOCK generic map (FREQ_G =>2_000_000) port map (clk=> CLK_FPGA, reset =>'0', clk_out => clock_4Mhz);
 
 prescaler : process (channel, reset)
 begin
@@ -82,42 +80,38 @@ begin
     end if;
 end process;
 
-process_count : process (channelDiv, reset)
-begin
-
-    if (reset = '1') then
-        total_count <= 0;
-        M_READY <= '1';
-        start_count <= '0';
-    elsif channelDiv = '1' then
-        M_READY <= '0';
-        start_count <= '1';
-    elsif channelDiv = '0' tnen
-        total_count <= counter;
-        M_READY <= '1';
-        start_count <='0';
-    end if;
-end process;
-
-
-
-counter_duty : process (clock_4Mhz, reset, start_count)
+counter_periode : process (clock_4Mhz, reset)
 begin
     if (reset = '1') then
-        counter <= '0';
+        counter <= 0;
+        M_STATE <= S_ESPERA;
     elsif rising_edge(clock_4Mhz) then
-        if start_count = '1' then
-            counter <= counter +1;
-        else 
-            counter <= '0' ;
-        end if;
+     case M_STATE is
+        when S_ESPERA =>
+            dato_listo <='0';
+            counter <= 0;
+           if channelDiv = '1'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
+                M_STATE <= S_COUNTER_H;
+            end if;
+         when S_COUNTER_H =>
+           if channelDiv = '1'   then  -- Se espera a que flanco se ponga a '0'. para esperar el priemr flanco alto
+                counter <= counter +1;
+           else
+               M_STATE <= S_STOP;
+           end if;
+          when S_STOP =>
+            total_time <= counter;
+            dato_listo <='1';
+            M_STATE <= S_CLEAR; -- Termino de contar
+         when S_CLEAR =>    
+            M_STATE <= S_ESPERA;
+         when others =>
+             M_STATE <= S_ESPERA;             
+     end case;
+
     end if;
 end process;
 
-
-
-dato_listo <= M_READY;
-total_time <= total_count;
 
 end Behavioral;
 

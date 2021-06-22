@@ -14,3 +14,6 @@ set_property IOSTANDARD LVCMOS33 [get_ports s3]
 
 set_property IOSTANDARD LVCMOS33 [get_ports led_c]
 set_property IOSTANDARD LVCMOS33 [get_ports fr_color]
+
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets fr_color] 

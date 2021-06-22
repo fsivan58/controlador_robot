@@ -159,7 +159,7 @@ component SENSORCOLOR is
          led_c: out std_logic;
          reset : in std_logic;
          dato_listo : out STD_LOGIC; -- Flag para cuando se termina de contar los flancos
-         out_color : out integer range 0 to 2_000_000 -- 1024
+         out_color : out integer range 0 to 1_000_000 -- 1024
        );
 end component;
 
@@ -191,7 +191,7 @@ signal color_detected : STD_LOGIC := '0';
 signal number_display: integer range 0 to 999;
 
 
-constant COLOR_SCAN_MIN : integer range 0 to 1000 := 130;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 138;
 constant COLOR_SCAN_MAX : integer range 0 to 1000 := 150;
 
 signal reset_count : std_logic := '0';
@@ -255,13 +255,13 @@ begin
         led_m_l<='0';
      else
       if dato_listo_color = '1' then
-      number_display <= m_color_detected;
+        number_display <= m_color_detected;
         if m_color_detected > COLOR_SCAN_MIN and m_color_detected < COLOR_SCAN_MAX then
          color_detected <='1';
-            led_m_l<='0';
+         led_m_l<='0';
         else 
          color_detected <='0';
-            led_m_l<='1';
+         led_m_l<='1';
         end if;
          
      end if;
@@ -294,5 +294,4 @@ end process;
 stop <=  start_stop or  m_crash or color_detected;
 
 reset_count <= not sw_start;
-
 end Behavioral;
