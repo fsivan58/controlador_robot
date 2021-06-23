@@ -65,39 +65,19 @@ end component;
 
 signal s2_int, s3_int : STD_LOGIC :='0'; -- Filtro color
 
-signal total_time: integer  range 0 to 2_000_000;
- 
- -- Contador de flancos 
-signal dato_listo_fr: std_logic := '0';
-signal dato_listo_count: std_logic := '0';
-
-
 begin
 
-
 -- Seleccionar color
-m_selecColor : FILTERCOLOR port map (color => "11", s2=> s2, s3=> s3);
+m_selecColor : FILTERCOLOR port map (color => "00", s2=> s2, s3=> s3);
 
 -- Contar lo que entra del sensor
-m_periodo: PERIODO port map(CLK_FPGA=> CLK_FPGA,reset=>reset, channel=>serial_color, dato_listo=>dato_listo_fr, total_time=>total_time);
+m_periodo: PERIODO port map(CLK_FPGA=> CLK_FPGA,reset=>reset, channel=>serial_color, dato_listo=>dato_listo, total_time=>out_color);
+
 -- Config 12khz s0 <= '1' s1 <= '0'
 s0<='1';
 s1<='0';
 
-
-process(CLK_FPGA)
-begin 
-   if rising_edge(CLK_FPGA) then
-       if dato_listo_fr ='1' then
-           out_color <= total_time;
-           led_c <='0'; 
-           dato_listo <= '1';
-       else
-           led_c <='1'; 
-          dato_listo <= '0';
-      end if;
-   end if;
-end process;
+led_c <= not reset; 
 
 end Behavioral;
 

@@ -191,8 +191,8 @@ signal color_detected : STD_LOGIC := '0';
 signal number_display: integer range 0 to 999;
 
 
-constant COLOR_SCAN_MIN : integer range 0 to 1000 := 138;
-constant COLOR_SCAN_MAX : integer range 0 to 1000 := 150;
+constant COLOR_SCAN_MIN : integer range 0 to 1000 := 258;
+constant COLOR_SCAN_MAX : integer range 0 to 1000 := 272;
 
 signal reset_count : std_logic := '0';
 

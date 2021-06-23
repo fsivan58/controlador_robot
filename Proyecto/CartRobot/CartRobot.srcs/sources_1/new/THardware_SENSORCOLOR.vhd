@@ -46,7 +46,8 @@ entity THardware_SENSORCOLOR is
         dig_2 : out std_logic;
         dig_3 : out std_logic;
         led_m_l : out std_logic;
-        led_m_r : out std_logic
+        led_m_r : out std_logic;
+        out_p16 : out std_logic
        );
 end THardware_SENSORCOLOR;
 
@@ -106,6 +107,8 @@ m_clok: clock generic map (FREQ_G=> 120) port map(clk=> CLK_FPGA, reset => '0', 
 m_display :Display port map (clk=>clock_display, number=>out_color_disp, out_display=> out_display, dig_1=>dig_1, dig_2=>dig_2, dig_3=>dig_3);
 
 led_m_l <= not color_listo;
+
+out_p16 <= color_listo;
 
 read_color : process (CLK_FPGA)
 begin
