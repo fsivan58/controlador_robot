@@ -111,6 +111,7 @@ if rising_edge(CLK_FPGA) then
                  crash <='0';
             end if;
         else
+           crash <='0';
            obst_front <= '0';
         end if;
     end if;
